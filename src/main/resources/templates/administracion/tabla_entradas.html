@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
+<body>
+    <div id="main-wrapper">
+        <div class="container-fluid mw-100">
+            <div class="row">
+                <div class="datatables">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="mb-2">
+                                        <h5 class="mb-0">File export</h5>
+                                    </div>
+                                    <p class="card-subtitle mb-3">
+                                        Datos de los estudiantes vigentes
+                                    </p>
+                                    <div class="table-responsive">
+                                        <table id="file_export"
+                                            class="table border w-100 table-striped table-bordered display text-nowrap"
+                                            style="font-size: 12px">
+                                            <thead>
+                                                <tr>
+                                                    <th>#</th>
+                                                    <th>Titulo</th>
+                                                    <th>Identificador</th>
+                                                    <th>ESTADO</th>
+                                                    <th>Gestionador/a</th>
+                                                    <th>Opciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr th:each="e, index : ${entradas}">
+                                                    <td th:text="${index.index+1}"></td>
+                                                    <td th:text="${e.titulo.titulo}"></td>
+                                                    <td th:text="${e.identificador}"></td>
+                                                    <td th:text="${e.estado}"></td>
+                                                    <td></td>
+                                                    <td class="text-center">
+                                                        
+                                                    </td>                                                     
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div th:replace="~{layout/script :: script}"></div>
+</body>
+
+</html>

@@ -1,0 +1,561 @@
+<header th:fragment="topbar-car" class="topbar card rounded-0 border-0">
+    <div class="with-vertical">
+        <nav class="navbar navbar-expand-lg px-lg-0 px-3 py-0">
+            <div class="d-none d-lg-block">
+                <div class="brand-logo d-flex align-items-center justify-content-between ps-lg-3">
+                    <a href="../dark/index.html"
+                        class="text-nowrap logo-img d-flex align-items-center gap-1">
+                        <b class="logo-icon">
+                            <img src="../assets/images/logos/logo-icon.svg" alt="homepage"
+                                class="dark-logo" />
+                            <img src="../assets/images/logos/logo-light-icon.svg" alt="homepage"
+                                class="light-logo" />
+                        </b>
+                    </a>
+                </div>
+            </div>
+
+            <ul class="navbar-nav ps-xl-3">
+                <li class="nav-item">
+                    <a class="nav-link nav-icon-hover sidebartoggler" id="headerCollapse"
+                        href="javascript:void(0)">
+                        <iconify-icon icon="solar:hamburger-menu-line-duotone"></iconify-icon>
+                    </a>
+                </li>
+                <li class="nav-item d-none d-lg-block search-box">
+                    <a class="nav-link nav-icon-hover d-none d-md-flex waves-effect waves-dark"
+                        href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <iconify-icon icon="solar:magnifer-linear"></iconify-icon>
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-block d-lg-none">
+                <div class="brand-logo d-flex align-items-center justify-content-between ps-lg-3">
+                    <a href="../dark/index.html"
+                        class="text-nowrap logo-img d-flex align-items-center gap-1">
+                        <b class="logo-icon">
+
+                            <img src="../assets/images/logos/logo-icon.svg" alt="homepage" class="dark-logo" />
+
+                            <img src="../assets/images/logos/logo-light-icon.svg" alt="homepage" class="light-logo" />
+                        </b>
+                    </a>
+                </div>
+            </div>
+            <a class="navbar-toggler nav-icon-hover p-0 border-0" href="javascript:void(0)"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="p-2">
+                    <i class="ti ti-dots fs-7"></i>
+                </span>
+            </a>
+            <div class="collapse navbar-collapse justify-content-end pe-2" id="navbarNav">
+                <div class="d-flex align-items-center justify-content-between">
+                    <ul class="navbar-nav flex-row mx-auto align-items-center justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-hover moon dark-layout" href="javascript:void(0)">
+                                <iconify-icon icon="solar:moon-line-duotone" class="moon"></iconify-icon>
+                            </a>
+                            <a class="nav-link nav-icon-hover sun light-layout" href="javascript:void(0)">
+                                <iconify-icon icon="solar:sun-2-line-duotone" class="sun"></iconify-icon>
+                            </a>
+                        </li>
+                        <!-- ------------------------------- -->
+                        <!-- start notification Dropdown -->
+                        <!-- ------------------------------- -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <iconify-icon icon="solar:bell-bing-line-duotone"></iconify-icon>
+                                <div class="notify">
+                                    <span class="heartbit"></span> <span class="point"></span>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu pt-0 content-dd dropdown-menu-end dropdown-menu-animate-up"
+                                aria-labelledby="drop2">
+                                <div
+                                    class="d-flex border-bottom align-items-center justify-content-between py-3 px-4">
+                                    <div class="mb-0 fs-4 fw-medium text-dark">Notifications</div>
+                                </div>
+                                <div class="message-body" data-simplebar>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span
+                                            class="flex-shrink-0 bg-danger-subtle rounded-circle round d-flex align-items-center justify-content-center fs-6 text-danger">
+                                            <iconify-icon icon="solar:widget-3-line-duotone"></iconify-icon>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Luanch Admin</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:30
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just see
+                                                the my new admin!</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span
+                                            class="flex-shrink-0 bg-success-subtle rounded-circle round d-flex align-items-center justify-content-center fs-6 text-success">
+                                            <iconify-icon
+                                                icon="solar:calendar-mark-line-duotone"></iconify-icon>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Event today</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:10
+                                                    AM</span>
+                                            </div>
+
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just a
+                                                reminder that you have event</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span
+                                            class="flex-shrink-0 bg-primary-subtle rounded-circle round d-flex align-items-center justify-content-center fs-6 text-primary">
+                                            <iconify-icon
+                                                icon="solar:settings-minimalistic-line-duotone"></iconify-icon>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Settings</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:08
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">You can
+                                                customize this template as you want</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span
+                                            class="flex-shrink-0 bg-warning-subtle rounded-circle round d-flex align-items-center justify-content-center fs-6 text-warning">
+                                            <iconify-icon
+                                                icon="solar:link-circle-line-duotone"></iconify-icon>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Luanch Admin</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:30
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just see
+                                                the my new admin!</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span
+                                            class="flex-shrink-0 bg-success-subtle rounded-circle round d-flex align-items-center justify-content-center">
+                                            <i data-feather="calendar"
+                                                class="feather-sm fill-white text-success"></i>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Event today</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:10
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just a
+                                                reminder that you have event</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span
+                                            class="flex-shrink-0 bg-primary-subtle rounded-circle round d-flex align-items-center justify-content-center">
+                                            <i data-feather="settings"
+                                                class="feather-sm fill-white text-primary"></i>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Settings</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:08
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">You can
+                                                customize this template as you want</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a class="d-flex align-items-center pt-3 pb-2 justify-content-center text-dark"
+                                        href="javascript:void(0);">
+                                        <span class="fw-semibold">Check all notifications</span>
+                                        <i data-feather="chevron-right" class="feather-sm"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <iconify-icon icon="solar:inbox-line-line-duotone"></iconify-icon>
+                                <div class="notify">
+                                    <span class="heartbit"></span> <span class="point"></span>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu pt-0 content-dd dropdown-menu-end dropdown-menu-animate-up"
+                                aria-labelledby="drop2">
+                                <div
+                                    class="d-flex border-bottom align-items-center justify-content-between py-3 px-4">
+                                    <h5 class="mb-0 fs-4 fw-medium text-dark">You have 4 new messages</h5>
+                                </div>
+                                <div class="message-body" data-simplebar>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span class="user-img position-relative d-inline-block">
+                                            <img src="../assets/images/profile/user-8.jpg" alt="user"
+                                                class="rounded-circle w-100 round-40" />
+                                            <span
+                                                class="profile-status bg-success position-absolute rounded-circle"></span>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Mathew Anderson</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:30
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just see
+                                                the my new admin!</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span class="user-img position-relative d-inline-block">
+                                            <img src="../assets/images/profile/user-2.jpg" alt="user"
+                                                class="rounded-circle w-100 round-40" />
+                                            <span
+                                                class="profile-status bg-success position-absolute rounded-circle"></span>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Bianca Anderson</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:10
+                                                    AM</span>
+                                            </div>
+
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just a
+                                                reminder that you have event</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span class="user-img position-relative d-inline-block">
+                                            <img src="../assets/images/profile/user-3.jpg" alt="user"
+                                                class="rounded-circle w-100 round-40" />
+                                            <span
+                                                class="profile-status bg-success position-absolute rounded-circle"></span>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Andrew Johnson</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:08
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">You can
+                                                customize this template as you want</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span class="user-img position-relative d-inline-block">
+                                            <img src="../assets/images/profile/user-4.jpg" alt="user"
+                                                class="rounded-circle w-100 round-40" />
+                                            <span
+                                                class="profile-status bg-success position-absolute rounded-circle"></span>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Mark Strokes</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:30
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just see
+                                                the my new admin!</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span class="user-img position-relative d-inline-block">
+                                            <img src="../assets/images/profile/user-5.jpg" alt="user"
+                                                class="rounded-circle w-100 round-40" />
+                                            <span
+                                                class="profile-status bg-success position-absolute rounded-circle"></span>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Mark, Stoinus &
+                                                    Rishvi..</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:10
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">Just a
+                                                reminder that you have event</span>
+                                        </div>
+                                    </a>
+                                    <a href="javascript:void(0)"
+                                        class="p-3 pe-0 d-flex align-items-center dropdown-item gap-3 border-bottom">
+                                        <span class="user-img position-relative d-inline-block">
+                                            <img src="../assets/images/profile/user-6.jpg" alt="user"
+                                                class="rounded-circle w-100 round-40" />
+                                            <span
+                                                class="profile-status bg-success position-absolute rounded-circle"></span>
+                                        </span>
+                                        <div class="w-75 d-inline-block v-middle">
+                                            <div class="d-flex align-items-center justify-content-between">
+                                                <h6 class="mb-0 fw-semibold lh-base">Settings</h6>
+                                                <span class="fs-2 text-nowrap d-block subtext">9:08
+                                                    AM</span>
+                                            </div>
+                                            <span class="fs-2 d-block text-truncate text-truncate">You can
+                                                customize this template as you want</span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div>
+                                    <a class="d-flex align-items-center pt-3 pb-2 justify-content-center text-dark"
+                                        href="javascript:void(0);">
+                                        <span class="fw-semibold">See all e-Mails</span>
+                                        <i data-feather="chevron-right" class="feather-sm"></i>
+                                    </a>
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <!-- ------------------------------- -->
+                        <!-- start profile Dropdown -->
+                        <!-- ------------------------------- -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="../assets/images/profile/user-1.jpg" alt="user" width="30"
+                                    class="profile-pic rounded-circle" />
+                            </a>
+                            <div class="dropdown-menu pt-0 content-dd overflow-hidden pt-0 dropdown-menu-end user-dd animated flipInY"
+                                aria-labelledby="drop2">
+                                <div class="profile-dropdown position-relative" data-simplebar>
+                                    <div class="py-3 px-7 pb-0">
+                                        <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center py-9 mx-7 border-bottom">
+                                        <img src="../assets/images/profile/user-1.jpg"
+                                            class="rounded-circle" width="80" height="80" alt="" />
+                                        <div class="ms-3">
+                                            <h5 class="mb-1 fs-4">Tania Andrew</h5>
+                                            <span class="mb-1 d-block">Designer</span>
+                                            <p class="mb-0 d-flex align-items-center gap-2">
+                                                <i class="ti ti-mail fs-4"></i> info@adminpro.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="message-body">
+                                        <a href="../dark/page-user-profile.html"
+                                            class="py-8 px-7 mt-8 d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
+                                                <iconify-icon
+                                                    icon="solar:user-circle-line-duotone"></iconify-icon>
+                                            </span>
+                                            <div class="w-75 d-inline-block v-middle ps-3">
+                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Profile</h6>
+                                                <span class="fs-2 d-block text-body-secondary">Account
+                                                    Settings</span>
+                                            </div>
+                                        </a>
+                                        <a href="../dark/app-email.html"
+                                            class="py-8 px-7 d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
+                                                <iconify-icon
+                                                    icon="solar:inbox-line-line-duotone"></iconify-icon>
+                                            </span>
+                                            <div class="w-75 d-inline-block v-middle ps-3">
+                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Inbox</h6>
+                                                <span class="fs-2 d-block text-body-secondary">Messages &
+                                                    Emails</span>
+                                            </div>
+                                        </a>
+                                        <a href="../dark/app-notes.html"
+                                            class="py-8 px-7 d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
+                                                <iconify-icon
+                                                    icon="solar:checklist-minimalistic-line-duotone"></iconify-icon>
+                                            </span>
+                                            <div class="w-75 d-inline-block v-middle ps-3">
+                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Task</h6>
+                                                <span class="fs-2 d-block text-body-secondary">To-do and
+                                                    Daily Tasks</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="d-grid py-4 px-7 pt-8">
+                                        <a href="../dark/authentication-login.html"
+                                            class="btn btn-primary">Log Out</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <!-- ------------------------------- -->
+                        <!-- end profile Dropdown -->
+                        <!-- ------------------------------- -->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="app-header with-horizontal">
+        <nav class="navbar navbar-expand-xl container-fluid p-0">
+            <ul class="navbar-nav">
+                <li class="nav-item d-block d-xl-none">
+                    <a class="nav-link sidebartoggler ms-n3" id="sidebarCollapse" href="javascript:void(0)">
+                        <iconify-icon icon="solar:hamburger-menu-line-duotone"></iconify-icon>
+                    </a>
+                </li>
+                <li class="nav-item d-none d-xl-block">
+                    <div class="brand-logo d-flex align-items-center justify-content-between ps-lg-3">
+                        <a href="../dark/index.html"
+                            class="text-nowrap logo-img d-flex align-items-center gap-1">
+                            <b class="logo-icon">
+                                <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
+                                <!-- Dark Logo icon -->
+                                <img src="../assets/images/logos/logo-icon.svg" alt="homepage"
+                                    class="dark-logo" />
+                                <!-- Light Logo icon -->
+                                <img src="../assets/images/logos/logo-light-icon.svg" alt="homepage"
+                                    class="light-logo" />
+                            </b>
+                            <!--End Logo icon -->
+                            <!-- Logo text -->
+                            <span class="logo-text">
+                                <!-- dark Logo text -->
+                                <img src="../assets/images/logos/logo-text.svg" alt="homepage"
+                                    class="dark-logo ps-2" />
+                                <!-- Light Logo text -->
+                                <img src="../assets/images/logos/logo-light-text.svg"
+                                    class="light-logo ps-2" alt="homepage" />
+                            </span>
+                        </a>
+                    </div>
+
+                </li>
+                <li class="nav-item d-none d-lg-block search-box">
+                    <a class="nav-link nav-icon-hover d-none d-md-flex waves-effect waves-dark"
+                        href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        <iconify-icon icon="solar:magnifer-linear"></iconify-icon>
+                    </a>
+                </li>
+            </ul>
+
+
+            <a class="navbar-toggler nav-icon-hover p-0 border-0" href="javascript:void(0)"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="p-2">
+                    <i class="ti ti-dots fs-7"></i>
+                </span>
+            </a>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="d-flex align-items-center justify-content-between">
+                    <ul class="navbar-nav flex-row mx-auto align-items-center justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link nav-icon-hover moon dark-layout" href="javascript:void(0)">
+                                <iconify-icon icon="solar:moon-line-duotone" class="moon"></iconify-icon>
+                            </a>
+                            <a class="nav-link nav-icon-hover sun light-layout" href="javascript:void(0)">
+                                <iconify-icon icon="solar:sun-2-line-duotone" class="sun"></iconify-icon>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="../assets/images/profile/user-1.jpg" alt="user" width="30"
+                                    class="profile-pic rounded-circle" />
+                            </a>
+                            <div class="dropdown-menu content-dd overflow-hidden pt-0  dropdown-menu-end user-dd animated flipInY"
+                                aria-labelledby="drop2">
+                                <div class="profile-dropdown position-relative" data-simplebar>
+                                    <div class="py-3 px-7 pb-0">
+                                        <h5 class="mb-0 fs-5 fw-semibold">User Profile</h5>
+                                    </div>
+                                    <div class="d-flex align-items-center py-9 mx-7 border-bottom">
+                                        <img src="../assets/images/profile/user-1.jpg"
+                                            class="rounded-circle" width="80" height="80" alt="" />
+                                        <div class="ms-3">
+                                            <h5 class="mb-1 fs-4">Tania Andrew</h5>
+                                            <span class="mb-1 d-block">Designer</span>
+                                            <p class="mb-0 d-flex align-items-center gap-2">
+                                                <i class="ti ti-mail fs-4"></i> info@adminpro.com
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="message-body">
+                                        <a href="../dark/page-user-profile.html"
+                                            class="py-8 px-7 mt-8 d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
+                                                <iconify-icon
+                                                    icon="solar:user-circle-line-duotone"></iconify-icon>
+                                            </span>
+                                            <div class="w-75 d-inline-block v-middle ps-3">
+                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Profile</h6>
+                                                <span class="fs-2 d-block text-body-secondary">Account
+                                                    Settings</span>
+                                            </div>
+                                        </a>
+                                        <a href="../dark/app-email.html"
+                                            class="py-8 px-7 d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
+                                                <iconify-icon
+                                                    icon="solar:inbox-line-line-duotone"></iconify-icon>
+                                            </span>
+                                            <div class="w-75 d-inline-block v-middle ps-3">
+                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Inbox</h6>
+                                                <span class="fs-2 d-block text-body-secondary">Messages &
+                                                    Emails</span>
+                                            </div>
+                                        </a>
+                                        <a href="../dark/app-notes.html"
+                                            class="py-8 px-7 d-flex align-items-center">
+                                            <span
+                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
+                                                <iconify-icon
+                                                    icon="solar:checklist-minimalistic-line-duotone"></iconify-icon>
+                                            </span>
+                                            <div class="w-75 d-inline-block v-middle ps-3">
+                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Task</h6>
+                                                <span class="fs-2 d-block text-body-secondary">To-do and
+                                                    Daily Tasks</span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="d-grid py-4 px-7 pt-8">
+                                        <a href="../dark/authentication-login.html"
+                                            class="btn btn-primary">Log Out</a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </li>
+
+                        <!-- ------------------------------- -->
+                        <!-- end profile Dropdown -->
+                        <!-- ------------------------------- -->
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

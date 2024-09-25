@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-bs-theme="dark" data-color-theme="Blue_Theme" data-layout="vertical">
+<head>
+    <style>
+        .spinner-border {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="main-wrapper">
+        <div class="container-fluid mw-100">
+            <div class="row justify-content-center mt-5">
+                <div class="col-sm-4 shadow p-3">
+                    <div class="text-center mb-4">
+                        <h4>Generar Códigos QR</h4>
+                    </div>
+                    <form id="qrForm" action="#" method="post">
+                        <div class="mb-3">
+                            <label for="titulo">Título:</label>
+                            <input type="text" id="titulo" name="titulo" class="form-control" autocomplete="off" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cantidad">Cantidad de QR a generar:</label>
+                            <input type="number" id="cantidad" name="cantidad" class="form-control" min="1" autocomplete="off" required>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="generarBtn">Generar QR <span class="spinner-border spinner-border-sm" id="spinnerBtn" role="status" aria-hidden="true" style="display:none;"></span> </button>
+                    </form>
+                    <div id="mensaje" class="mt-3"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de descarga -->
+        <div class="modal fade" id="modalDescarga" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Descargar ZIP</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Los QR han sido generados correctamente. Haga clic en el botón de abajo para descargar el archivo ZIP.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="/entradas/download" class="btn btn-success" id="descargarBtn">Descargar ZIP</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#generarBtn').click(function() {
+                const titulo = $('#titulo').val();
+                const cantidad = $('#cantidad').val();
+                $('#spinnerBtn').show();
+                $('#generarBtn').attr('disabled', true).text('Generando QR...');
+                $.post("/entradas/generar", { titulo: titulo, cantidad: cantidad })
+                .done(function(response) {
+                    
+                    $('#mensaje').html('<p class="text-success">QR generados correctamente.</p>');
+                    $('#modalDescarga').modal('show');
+                })
+                .fail(function() {
+                    $('#mensaje').html('<p class="text-danger">Error generando QR.</p>');
+                })
+                .always(function(){
+                    $('#spinnerBtn').hide();
+                    $('#generarBtn').attr('disabled', false).text('Generar QR');
+                })
+            });
+            $('#descargarBtn').click(function() {
+                $('#qrForm')[0].reset();
+                $('#mensaje').empty();
+                $('#modalDescarga').modal('hide');
+            });
+        });
+    </script>
+</body>
+
+</html>

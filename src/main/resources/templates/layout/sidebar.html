@@ -1,0 +1,201 @@
+
+<aside th:fragment="sidebar" class="left-sidebar with-vertical">
+    <a type="button" class="brand-link text-center active" style="text-decoration: none" id="opcionInicial"> 
+        <span class="brand-text font-weight-light">Menu Principal</span>
+    </a>
+    <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+        <ul id="sidebarnav" class="px-2">
+            <li class="sidebar-item pt-3 pb-2 sidebar-profile">
+                <a class="sidebar-link has-arrow opacity-100 gap-2" type="button" aria-expanded="false">
+                    <span class="d-flex">
+                        <img src="../assets/images/profile/user-1.jpg" class="rounded-3" width="30" alt="user" />
+                    </span>
+                    <span class="hide-menu">Administrador</span>
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                    <li class="sidebar-item">
+                        <a href="javascript:void(0)" class="sidebar-link">
+                            <div class="round-16 d-flex align-items-center justify-content-center">
+                                <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            </div>
+                            <span class="hide-menu">Mi Perfil</span>
+                        </a>
+                        <a id="opcionesAdminRol" type="button" class="sidebar-link">
+                            <div class="round-16 d-flex align-items-center justify-content-center">
+                                <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            </div>
+                            <span class="hide-menu">Administrar Roles</span>
+                        </a>
+                        <a id="opcionesAdminUsuario" type="button" class="sidebar-link">
+                            <div class="round-16 d-flex align-items-center justify-content-center">
+                                <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            </div>
+                            <span class="hide-menu">Administración de Usuarios</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-small-cap">
+                <iconify-icon icon="solar:menu-dots-bold" class="nav-small-cap-icon fs-4"></iconify-icon>
+                <span class="hide-menu">INICIO</span>
+            </li>
+
+            <li class="sidebar-item" th:if="${session.nombre_rol == 'ESTUDIANTE' or session.nombre_rol == 'SUPER USUARIO'}">
+                <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
+                    <span class="d-flex">
+                        <iconify-icon icon="solar:widget-4-line-duotone"></iconify-icon>
+                    </span>
+                    <span class="hide-menu">Administracion</span>
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                    <li class="sidebar-item">
+                        <a id="opcionesAdminPersona" type="button" class="sidebar-link">
+                            <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            <span class="hide-menu">Administarción Personal</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a id="opcionesListarQR" type="button" class="sidebar-link">
+                            <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            <span class="hide-menu">Administarción de Entradas</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="sidebar-item" th:if="${session.nombre_rol == 'ESTUDIANTE' or session.nombre_rol == 'SUPER USUARIO'}">
+                <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
+                    <span class="d-flex">
+                        <iconify-icon icon="solar:widget-4-line-duotone"></iconify-icon>
+                    </span>
+                    <span class="hide-menu">Entradas QR</span>
+                </a>
+                <ul aria-expanded="false" class="collapse first-level">
+                    <li class="sidebar-item">
+                        <a id="opcionesGenerarQR" type="button" class="sidebar-link">
+                            <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            <span class="hide-menu">Generar QR</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a id="opcionesEscanearQR" type="button" class="sidebar-link">
+                            <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                            <span class="hide-menu">Escanear QR</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    <script>
+        function loadPage(url) {
+            $("#spinner-overlay").show();
+            fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('main-content').innerHTML = html;
+                    $("#spinner-overlay").hide();
+                })
+                .catch(error => {
+                    console.error('Error al cargar la página:', error);
+                    $("#spinner-overlay").hide();
+                });
+        }
+    </script>
+
+    <script>
+        $(document).ready(function(){
+            var botonPulsado;
+            botonPulsado = document.getElementById("opcionInicial");
+
+            function inicializarSidebar() {
+                // Elimina los eventos previos para evitar duplicación
+                $('.has-arrow').off('click').on('click', function (e) {
+                    e.preventDefault();
+
+                    let submenu = $(this).next('ul');
+                    let parentItem = $(this).parent();
+
+                    // Verifica si ya está activo
+                    if (parentItem.hasClass('active')) {
+                        submenu.slideUp();
+                        parentItem.removeClass('active');
+                    } else {
+                        // Cierra los otros items activos
+                        $('.sidebar-item.active').not(parentItem).removeClass('active').children('ul').slideUp();
+
+                        // Despliega el actual
+                        submenu.slideDown();
+                        parentItem.addClass('active');
+                    }
+                });
+            }
+
+            function cargarContenido(url) {
+                $.ajax({
+                    url: url,
+                    method: 'GET',
+                    beforeSend: function() {
+                        $("#spinner-overlay").show();
+                    },
+                    success: function(data) {
+                        $('#main-content').html(data);
+                        inicializarSidebar(); // Inicializa de nuevo el sidebar después de cargar contenido
+                        $("#spinner-overlay").hide();
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error al cargar el contenido:", error);
+                        $("#spinner-overlay").hide();
+                    }
+                });
+            }
+
+            $("#opcionesAdminRol").click(function (e){
+                e.preventDefault();
+                cargarContenido("/vista-rol");
+                actualizarActivo("#opcionesAdminRol");
+            });
+
+            $("#opcionesAdminUsuario").click(function (e){
+                e.preventDefault();
+                cargarContenido("/administrar-usuario");
+                actualizarActivo("#opcionesAdminUsuario");
+            });
+
+            $("#opcionesAdminPersona").click(function (e){
+                e.preventDefault();
+                cargarContenido("/vista_persona");
+                actualizarActivo("#opcionesAdminPersona");
+            });
+
+            $("#opcionesListarQR").click(function (e){
+                e.preventDefault();
+                cargarContenido("/listar_qr");
+                actualizarActivo("#opcionesListarQR");
+            });
+
+            $("#opcionesGenerarQR").click(function (e){
+                e.preventDefault();
+                cargarContenido("/entradas/generarQr");
+                actualizarActivo("#opcionesGenerarQR");
+            });
+
+            $("#opcionesEscanearQR").click(function (e){
+                e.preventDefault();
+                cargarContenido("/entradas/validacion");
+                actualizarActivo("#opcionesEscanearQR");
+            });
+
+            function actualizarActivo(selector) {
+                if (botonPulsado && botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.querySelector(selector);
+                botonPulsado.classList.add("active");
+            }
+
+            inicializarSidebar();
+        });
+    </script>
+</aside>
