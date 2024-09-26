@@ -116,6 +116,91 @@ qrcode.callback = (respuestaEncriptada) => {
   }
 };
 
+// Función para validar el código introducido manualmente
+// Función para consultar el código introducido manualmente
+const consultarCodigo = () => {
+  const codigoInput = document.getElementById("codigoInput").value.trim(); // Asegúrate de que no haya espacios vacíos
+
+  if (!codigoInput) {
+    Swal.fire('Por favor, introduzca un código.');
+    return;
+  }
+
+  Swal.fire({
+    title: 'Consultando código...',
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  fetch('/entradas/validar-codigo', {  // Asegúrate que la ruta aquí sea correcta
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ codigo: codigoInput }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`Error en la consulta: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    Swal.close(); // Cerrar el spinner de carga
+
+    // Validación del mensaje del backend
+    if (data.mensaje === 'aprobado') {
+      Swal.fire('Este código ya ha sido aprobado');
+    } else if (data.mensaje === 'no_aprobado') {
+      Swal.fire({
+        title: 'Este código no está aprobado',
+        text: '¿Deseas aprobarlo?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Aprobar',
+        cancelButtonText: 'Cancelar'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          aprobarCodigo(codigoInput); // Llamar a la función de aprobación si el usuario lo confirma
+        }
+      });
+    } else if (data.mensaje === 'no_existe') {
+      Swal.fire('El código no existe, posible falsificación.');
+    } else {
+      Swal.fire('Respuesta inesperada del servidor');
+    }
+
+    // Limpiar el campo de entrada después de la consulta
+    document.getElementById("codigoInput").value = '';
+
+  })
+  .catch(error => {
+    console.error('Error validando código:', error);
+    Swal.fire('Error validando código', error.message, 'error');
+  });
+};
+
+// Función para aprobar el código manualmente
+const aprobarCodigo = (codigo) => {
+  fetch('/entradas/aprobar-codigo', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ codigo: codigo }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    Swal.fire(data.mensaje);
+  })
+  .catch(error => {
+    console.error('Error aprobando código:', error);
+    Swal.fire('Error aprobando código', error.message, 'error');
+  });
+};
+
+
 const aprobarQr = (identificador) => {
   fetch('/entradas/aprobar', {
     method: 'POST',
@@ -137,9 +222,3 @@ const aprobarQr = (identificador) => {
 window.addEventListener('load', (e) => {
   encenderCamara();
 })
-
-
-
-
-
-

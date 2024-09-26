@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -98,6 +100,32 @@ public class EntradaController {
         return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/validar-codigo")
+    public ResponseEntity<Map<String, String>> validarCodigo(@RequestBody Map<String, String> body) {
+        String codigo = body.get("codigo");
+        Map<String, String> response = new HashMap<>();
+
+        try {
+            Entrada entrada = entradaService.findByCodigo(codigo);
+            if (entrada != null) {
+                if ("APROBADO".equals(entrada.getEstado())) {
+                    response.put("mensaje", "aprobado");
+                } else {
+                    response.put("mensaje", "no_aprobado");
+                }
+            } else {
+                response.put("mensaje", "no_existe");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("mensaje", "Error en la validación del código"));
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    
+
     @PostMapping("/aprobar")
     public ResponseEntity<Map<String, String>> aprobarQr(@RequestBody Map<String, String> body) {
 
@@ -117,4 +145,25 @@ public class EntradaController {
 
         return ResponseEntity.ok(response);
     }
+
+
+    @PostMapping("/aprobar-codigo")
+    public ResponseEntity<?> aprobarCodigo(@RequestBody Map<String, String> request) {
+        String codigo = request.get("codigo");
+
+        try {
+            Entrada entrada = entradaService.findByCodigo(codigo);
+
+            if (entrada != null && !"APROBADO".equals(entrada.getEstado())) {
+                entrada.setEstado("APROBADO");
+                entradaService.save(entrada);
+                return ResponseEntity.ok(Collections.singletonMap("mensaje", "Código aprobado exitosamente"));
+            }
+
+            return ResponseEntity.ok(Collections.singletonMap("mensaje", "El código ya está aprobado o no se pudo encontrar"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("mensaje", "Error al aprobar el código"));
+        }
+    }
+
 }

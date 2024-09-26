@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
+
+<!-- <head th:replace="~{layout/head :: head}"></head> -->
+
+<body>
+    <!-- <div th:replace="~{layout/preloader :: preloader}"></div> -->
+    <div id="">
+        <!-- <aside th:replace="~{layout/sidebar :: sidebar}"></aside> -->
+        <div class="">
+            <!-- <header th:replace="~{layout/topbar :: topbar}"></header> -->
+
+            <div class="">
+                <div class="container-fluid mw-100">
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="mb-0">Lista de Usuarios registrados</h5>
+                            <button type="button" class="btn btn-primary btn-mg" onclick="cargarFormulario()" data-bs-toggle="modal" data-bs-target="#registroModal">
+                                Registrar Usuario
+                            </button>
+                        </div>
+                        
+                        <div class="modal fade" id="registroModal" tabindex="-1" aria-labelledby="registroModal" aria-hidden="true">
+                            <div class="modal-dialog ">
+                                <div class="modal-content" id="formularioUsuario_">
+                                    <!-- aqui se cargará el modal -->
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="TablaUsuario"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script  th:inline="javascript">
+
+        cargarTabla();
+        cargarTablaEstudiante();
+
+        function cargarTabla() {
+            $.ajax({
+                type: 'POST',
+                url: "/listarUsuario",  // Ruta del metodo del controlador en Spring Boot
+                success: function (response) {
+                    $("#TablaUsuario").html(response);  // Actualiza el contenido del div con la respuesta del servidor
+                }
+            });
+        }
+
+        function cargarFormulario() {
+            $.ajax({
+                type: 'POST',
+                url: "/FormularioUsuario",  // Ruta del metodo del controlador en Spring Boot
+                success: function (response) {
+
+                    $("#formularioUsuario_").html(response);  // Actualiza el contenido del div con la respuesta del servidor
+                }
+            });
+        }
+    </script>   
+
+    <script>
+        function EliminarRegistro(id, username) {
+            Swal.fire({
+                title: '¡Atención!',
+                text: '¿Estas Seguro que desea eliminar el registro: " '+ +' ' + username + ' "?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Si, eliminar!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/eliminarUsuario/" + id,
+                        success: function (response) {
+                            cargarTabla();
+                            Swal.fire(
+                                'Eliminado!',
+                                'Este registro se ha eliminado con éxito.',
+                                'success'
+                            );
+                        }, error: function (xhr, status, error) {s
+                            console.log(error);
+                        }
+                    });
+                }
+            });
+        }
+
+        function cargarModFormulario(id) {
+            $.ajax({
+                url: '/formularioEditUsuario/' + id,
+                method: 'GET',
+                success: function (response) {
+                    $("#formularioUsuario_").html(response);
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+    <div th:replace="~{layout/script :: script}"></div>
+</body>
+
+</html>

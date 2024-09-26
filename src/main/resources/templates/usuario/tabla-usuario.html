@@ -1,0 +1,49 @@
+<section class="content">
+    <div class="datatables">
+        <div class="card">
+            <div class="card-body">
+                <p class="card-subtitle mb-3">
+                    Datos de Usuarios ADMINISTRADORES vigentes
+                </p>
+                <div class="table-responsive">
+                    <table id="file_export"
+                        class="table border w-100 table-striped table-bordered display text-nowrap"
+                        style="font-size: 12px">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Usuario</th>
+                                <th>Rol</th>
+                                <th>Persona</th>
+                                <th>Opciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="UsuarioTableBody">
+                            <tr th:each="u, index : ${usuarios}" th:if="${u.estado == 'ACTIVO'}">
+                                <td th:text="${index.index+1}"></td>
+                                <td th:text="${u.username}"></td>
+                                <td th:text="${u.rol.nombreRol}"></td>
+                                <td th:text="${u.persona.nombre} + ' ' + ${u.persona.paterno} + ' ' + ${u.persona.materno}"></td>
+                                <td class="text-center">
+                                    <div class="btn-group">
+                                        <a class="btn btn-info me-2" type="button" style="color: aliceblue;"
+                                        data-bs-toggle="modal" data-bs-target="#registroModal"
+                                            th:attr="onclick='cargarModFormulario(\'' + ${u.idUsuario} + '\')'"><li class="fas fa-pencil-alt"></li></a>
+                                        <a class="btn btn-danger" type="button" style="color: aliceblue;"
+                                            th:attr="onclick='EliminarRegistro(\'' + ${u.idUsuario} + '\', \'' + ${u.username}+'\')'"><li class="fa-solid fa-trash"></li></a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+        $('#file_export').DataTable();
+    });
+</script>

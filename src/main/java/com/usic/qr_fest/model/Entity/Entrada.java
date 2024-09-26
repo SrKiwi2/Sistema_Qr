@@ -23,6 +23,8 @@ public class Entrada {
 
     private String identificador;
 
+    private String codigo;
+
     private String Estado;
 
     @ManyToOne(fetch = FetchType.LAZY)

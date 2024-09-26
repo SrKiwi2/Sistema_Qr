@@ -10,41 +10,14 @@
                         <h4 class="card-title mb-0">Datos Persona</h4>
                     </div>
                     <div class="card-body">
-                        <form action="/guardar-persona" method="post">
-                            <input type="hidden" name="idPersona" th:value="${persona.idPersona}" />
-                            <div class="row">
-                                <div class="form-group col-md-3 mb-3">
-                                    <label for="nombre">Nombres</label>
-                                    <input type="text" class="form-control" required
-                                        style="text-transform: uppercase;" name="nombre" id="nombre" placeholder="Nombre">
-                                </div>
-                                <div class="form-group col-md-3 mb-3">
-                                    <label for="apellidoP">Apellido Paterno</label>
-                                    <input type="text" class="form-control" required
-                                        style="text-transform: uppercase;" name="paterno" id="apellidoP"
-                                        placeholder="Apellido Paterno">
-                                </div>
-                                <div class="form-group col-md-3 mb-3">
-                                    <label for="apellidoM">Apellido Materno</label>
-                                    <input type="text" class="form-control" required
-                                        style="text-transform: uppercase;" name="materno" id="apellidoM"
-                                        placeholder="Apellido Materno">
-                                </div>
+                        <form action="/registrarPersona" method="post">
+                            <div class="form-group col-md-2 mb-3">
+                                <label for="codigo_funcionario">Codigo Funcionario</label>
+                                <input type="text" class="form-control" name="codigo_funcionario" id="codigo_funcionario" placeholder="Codigo Funcionario" required>
                             </div>
-                            <div class="row">
-                                <div class="form-group col-md-2 mb-3">
-                                    <label for="ci">C.I.</label>
-                                    <input type="text" class="form-control" name="ci" id="ci" placeholder="C.I."
-                                        required>
-                                </div>
-                                <div class="form-group col-md-2 mb-3">
-                                    <label for="rd">Codigo Funcionario.</label>
-                                    <input type="text" class="form-control" name="rd" id="rd" placeholder="Codigo Funcionario" required>
-                                </div>
-                            </div>
-                            <button type="submit" id="guardarUniversitario" class="btn btn-primary">Guardar</button>
-                            <button type="button" id="limpiarUniversitario" class="btn btn-danger" onclick="limpiarFormulario()">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Registrar Persona</button>
                         </form>
+                        
                     </div>
                 </div>
 
@@ -106,23 +79,57 @@
     </div>
 
     <script>
+        $('#personaForm').submit(function(event) {
+            event.preventDefault();  // Evitar el envío del formulario normal
+
+            var formData = $(this).serialize();  // Serializar el formulario
+            $.ajax({
+                url: '/registrarPersona',  // Ruta que apunta al controlador de registro
+                type: 'POST',
+                data: formData,
+                success: function(response) {
+                    Swal.fire(
+                        '¡Guardado!',
+                        'Registro guardado correctamente.',
+                        'success'
+                    );
+                    limpiarFormulario();
+                    actualizarTabla();  // Actualizar la tabla de personas
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire(
+                        'Error',
+                        'Hubo un problema al guardar el registro.',
+                        'error'
+                    );
+                }
+            });
+        });
 
         function limpiarFormulario() {
-            // Limpiar todos los campos del formulario
-            $('#idPersona').val(''); // Ocultar el campo de ID también
-            $('#nombre').val('');
-            $('#apellidoP').val('');
-            $('#apellidoM').val('');
-            $('#ci').val('');
-            $('#rd').val('');
+            $('#personaForm')[0].reset();  // Restablecer todos los campos del formulario
         }
+
+        function actualizarTabla() {
+            $.ajax({
+                url: '/vista_persona',  // Ruta para obtener la vista actualizada de la tabla
+                type: 'GET',
+                success: function(response) {
+                    // Actualizar solo el cuerpo de la tabla con los nuevos datos
+                    var tablaPersonas = $(response).find('#file_export tbody').html();
+                    $('#file_export tbody').html(tablaPersonas);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error al actualizar la tabla: ', error);
+                }
+            });
+        }
+
         function editarPersona(idPersona) {
-            // Realiza una solicitud AJAX para obtener los datos de la persona
             $.ajax({
                 url: '/persona/' + idPersona,
                 type: 'GET',
                 success: function(persona) {
-                    // Rellena el formulario con los datos obtenidos
                     $('#idPersona').val(persona.idPersona);
                     $('#nombre').val(persona.nombre);
                     $('#apellidoP').val(persona.paterno);
@@ -147,7 +154,6 @@
                 confirmButtonText: 'Sí, eliminarlo!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Enviar solicitud AJAX para eliminar el registro
                     $.ajax({
                         type: 'POST',
                         url: '/eliminar-persona/' + idPersona,
@@ -172,7 +178,6 @@
             });
         }
     </script>
-    
     <div th:replace="~{layout/script :: script}"></div>
 </body>
 

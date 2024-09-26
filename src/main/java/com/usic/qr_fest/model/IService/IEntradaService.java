@@ -14,4 +14,5 @@ public interface IEntradaService {
     public Entrada findOne(Long idEntrada);
     public void delete(Long idEntrada);
     public Entrada findByIdentificador(String identificador);
+    public Entrada findByCodigo(String codigo);
 }

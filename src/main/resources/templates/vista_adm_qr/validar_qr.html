@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="dark" data-color-theme="Blue_Theme" data-layout="vertical">
 
+<head th:replace="~{layout/head :: head}" ></head>
+
 <body>
     <div id="main-wrapper">
         <div class="container-fluid mw-100">
@@ -12,12 +14,16 @@
                             <a id="btn-scan-qr" href="#">
                                 <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg"
                                     class="img-fluid text-center" width="175">
-                                <a />
+                            </a>
                                 <canvas hidden="" id="qr-canvas" class="img-fluid"></canvas>
+                        </div>
+                        <div class="row mx-5 my-3">
+                            <input type="number" id="codigoInput" class="form-control" placeholder="Ingrese código aquí">
                         </div>
                         <div class="row mx-5 my-3">
                             <button class="btn btn-success btn-sm rounded-3 mb-2" onclick="encenderCamara()">ESCANEAR QR</button>
                             <button class="btn btn-danger btn-sm rounded-3" onclick="cerrarCamara()">DETENER ESCANEO</button>
+                            <button class="btn btn-primary btn-sm rounded-3 mt-3" onclick="consultarCodigo()">VALIDAR CÓDIGO</button>
                         </div>
                     </div>
                 </div>
@@ -27,6 +33,13 @@
 
     <audio id="audioScaner" src="../assets/sonido.mp3"></audio>
     <script src="../assets/js/index.js"></script>
+<script>
+    aler();
+    function aler() {
+        aler('PINCHE KIWI');
+    }
+</script>
+    <div th:replace="~{layout/script :: script}"></div>
 </body>
 
 </html>
