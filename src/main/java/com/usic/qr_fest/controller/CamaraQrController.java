@@ -1,19 +1,16 @@
 package com.usic.qr_fest.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.usic.qr_fest.model.Entity.Entrada;
 import com.usic.qr_fest.model.IService.IEntradaService;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Controller
 public class CamaraQrController {
@@ -34,6 +31,7 @@ public class CamaraQrController {
             if (entradaService.findEstadoByIdentificador(adjustedCodigoEncriptado).equals("NO APROBADO")) {
                 Entrada entrada = entradaService.findOne(entradaService.findIdEntradaByIdentificador(adjustedCodigoEncriptado));    
                 entrada.setEstado("APROBADO");
+                entrada.setFecha_aprobado(new Date());
                 entradaService.save(entrada);
                 model.addAttribute("variable", "ENTRADA APROBADA");
                 model.addAttribute("variable2", "1");
