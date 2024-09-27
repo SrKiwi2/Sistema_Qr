@@ -3,20 +3,20 @@
         <div class="row">
             <div class="row justify-content-center mt-5">
                 <div class="col-sm-4 shadow p-3">
-                    <h5 class="text-center">Escanear codigo QR</h5>
-                    <div class="row text-center">
+                    <h5 class="text-center">Inspeccionar codigo de boleto</h5>
+                    <!-- <div class="row text-center">
                         <a id="btn-scan-qr" href="#">
                             <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg"
                                 class="img-fluid text-center" width="175">
                         </a>
                             <canvas hidden="" id="qr-canvas" class="img-fluid"></canvas>
+                    </div> -->
+                    <div class="row mx-5 my-3">
+                        <input type="number" id="codigoInput" class="form-control" placeholder="Ingrese el código del boleto aquí">
                     </div>
                     <div class="row mx-5 my-3">
-                        <input type="number" id="codigoInput" class="form-control" placeholder="Ingrese código aquí">
-                    </div>
-                    <div class="row mx-5 my-3">
-                        <button class="btn btn-success btn-sm rounded-3 mb-2" onclick="encenderCamara()">ESCANEAR QR</button>
-                        <button class="btn btn-danger btn-sm rounded-3" onclick="cerrarCamara()">DETENER ESCANEO</button>
+                        <!-- <button class="btn btn-success btn-sm rounded-3 mb-2" onclick="encenderCamara()">ESCANEAR QR</button>
+                        <button class="btn btn-danger btn-sm rounded-3" onclick="cerrarCamara()">DETENER ESCANEO</button> -->
                         <button class="btn btn-primary btn-sm rounded-3 mt-3" onclick="consultarCodigo()">VALIDAR CÓDIGO</button>
                         <script>
                             //crea elemento

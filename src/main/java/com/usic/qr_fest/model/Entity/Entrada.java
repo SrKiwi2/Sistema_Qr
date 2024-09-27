@@ -1,5 +1,7 @@
 package com.usic.qr_fest.model.Entity;
 
+import java.util.Date;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +28,8 @@ public class Entrada {
     private String codigo;
 
     private String Estado;
+
+    private Date fecha_aprobado;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_titulo")
