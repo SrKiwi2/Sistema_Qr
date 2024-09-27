@@ -1,21 +1,225 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
-    <head th:replace="~{layout/head :: head}" ></head>
-    <body>
-        <div th:replace="~{layout/preloader :: preloader}"></div>
-        <div id="main-wrapper">
-            <aside th:replace="~{layout/sidebar :: sidebar}"></aside>
-            <div class="page-wrapper">
-                <header th:replace="~{layout/topbar :: topbar}"></header>
-                <div class="body-wrapper">
-                    <div class="container-fluid mw-100">
-                        <div th:replace="~{layout/card-modulo :: cardFragment('Bienvenido al Sistema...!', 'Inicio', '/vista-administrador', 'Inicio')}">
-                        </div>
-                        <div id="main-content"></div>
+
+<head th:replace="~{layout/head :: head}"></head>
+
+<body>
+    <div th:replace="~{layout/preloader :: preloader}"></div>
+    <div id="main-wrapper">
+        <!-- <aside th:replace="~{layout/sidebar :: sidebar}" class="left-sidebar with-vertical"></aside> -->
+        <aside th:fragment="sidebar" class="left-sidebar with-vertical">
+            <a type="button" class="brand-link text-center active" style="text-decoration: none" id="opcionInicial">
+                <span class="brand-text font-weight-light">Menu Principal</span>
+            </a>
+            <nav class="sidebar-nav scroll-sidebar" data-simplebar>
+                <ul id="sidebarnav" class="px-2">
+                    <li class="nav-small-cap">
+                        <iconify-icon icon="solar:menu-dots-bold" class="nav-small-cap-icon fs-4"></iconify-icon>
+                        <span class="hide-menu">INICIO</span>
+                    </li>
+                    <li class="sidebar-item"
+                        th:if="${session.nombre_rol == 'ADMNISTRADOR' or session.nombre_rol == 'SUPER USUARIO'}">
+                        <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
+                            <span class="d-flex">
+                                <iconify-icon icon="solar:widget-4-line-duotone"></iconify-icon>
+                            </span>
+                            <span class="hide-menu">ADMINISTRADOR</span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a id="opcionesAdminPersona" type="button" class="sidebar-link">
+                                    <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                                    <span class="hide-menu">Administarción Personal</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a id="opcionesAdminUsuario" type="button" class="sidebar-link">
+                                    <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                                    <span class="hide-menu">Administarción USUARIO</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item"
+                        th:if="${session.nombre_rol == 'ADMNISTRADOR' or session.nombre_rol == 'SUPER USUARIO'}">
+                        <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
+                            <span class="d-flex">
+                                <iconify-icon icon="solar:widget-4-line-duotone"></iconify-icon>
+                            </span>
+                            <span class="hide-menu">GENERAR QR</span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a id="opcionesGenerarQR" type="button" class="sidebar-link">
+                                    <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                                    <span class="hide-menu">Generar QR</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="sidebar-item"
+                        th:if="${session.nombre_rol == 'ADMNISTRADOR' or session.nombre_rol == 'SUPER USUARIO' or session.nombre_rol == 'ESCANEADOR'}">
+                        <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
+                            <span class="d-flex">
+                                <iconify-icon icon="solar:widget-4-line-duotone"></iconify-icon>
+                            </span>
+                            <span class="hide-menu">ENTRADAS QR</span>
+                        </a>
+                        <ul aria-expanded="false" class="collapse first-level">
+                            <li class="sidebar-item">
+                                <a id="opcionesEscanearQR" type="button" class="sidebar-link">
+                                    <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                                    <span class="hide-menu">Escanear QR</span>
+                                </a>
+                            </li>
+                            <li class="sidebar-item">
+                                <a id="opcionesListarQR" type="button" class="sidebar-link">
+                                    <iconify-icon icon="solar:stop-circle-line-duotone"></iconify-icon>
+                                    <span class="hide-menu">Administarción de Entradas</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+
+        </aside>
+        <div class="page-wrapper">
+            <header th:replace="~{layout/topbar :: topbar}"></header>
+            <div class="body-wrapper">
+                <div class="container-fluid mw-100">
+                    <div
+                        th:replace="~{layout/card-modulo :: cardFragment('Bienvenido al Sistema...!', 'Inicio', '/vista-administrador', 'Inicio')}">
                     </div>
+                    <!-- <div id="main-content"></div> -->
+                    <section class="content" id="main-content"></section>
                 </div>
             </div>
         </div>
-        <div th:replace="~{layout/script :: script}"></div>
-    </body>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="../assets/js/vendor.min.js"></script>
+    <!-- Import Js Files -->
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="../assets/js/theme/app.dark.init.js"></script>
+    <script src="../assets/js/theme/theme.js"></script>
+    <script src="../assets/js/theme/app.min.js"></script>
+    <script src="../assets/js/theme/sidebarmenu.js"></script>
+    <script src="../assets/js/theme/feather.min.js"></script>
+
+    <!-- solar icons -->
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
+    <script src="../assets/libs/nestable/jquery.nestable.js"></script>
+    <script src="../assets/js/plugins/nestable-init.js"></script>
+
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+
+    <script src="../assets/js/datatable/datatable-advanced.init.js"></script>
+
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+
+    <script src="../assets/js/sweetalert2.all.min.js"></script>
+
+    
+
+    <script>
+        var botonPulsado;
+        $(document).ready(function () {
+            botonPulsado = document.getElementById("opcionInicial");
+            $("#opcionesAdminRol").click(function (e) {
+                e.preventDefault();
+                cargarContenido("/vista-rol");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesAdminRol");
+                botonPulsado.classList.add("active");
+            });
+
+            $("#opcionesAdminUsuario").click(function (e) {
+                e.preventDefault();
+                cargarContenido("/administrar_usuario");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesAdminUsuario");
+                botonPulsado.classList.add("active");
+            });
+
+            $("#opcionesAdminPersona").click(function (e) {
+                e.preventDefault();
+                cargarContenido("/vista_persona");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesAdminPersona");
+                botonPulsado.classList.add("active");
+            });
+
+            $("#opcionesListarQR").click(function (e) {
+                e.preventDefault();
+                cargarContenido("/listar_qr");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesListarQR");
+                botonPulsado.classList.add("active");
+            });
+
+            $("#opcionesGenerarQR").click(function (e) {
+                e.preventDefault();
+                cargarContenido("/entradas/generarQr");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesGenerarQR");
+                botonPulsado.classList.add("active");
+            });
+
+            $("#opcionesEscanearQR").click(function (e) {
+                e.preventDefault();
+                cargarContenido("/entradas/validacion");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesEscanearQR");
+                botonPulsado.classList.add("active");
+            });
+
+            function cargarContenido(url) {
+
+                $("#main-content").html(`
+                                <div class="d-flex justify-content-center">
+                        <div class="spinner-border" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                        </div>
+                `);
+                const miDiv = document.getElementById("main-content");
+                miDiv.removeAttribute("style");
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    success: function (data) {
+                        $("#main-content").html(data);
+                        miDiv.setAttribute("style", "opacity: 1; width: 100%; transition: all 0.5s ease-out;"
+                        );
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("Error al cargar contenido: " + textStatus + " " + errorThrown);
+                        Swal.fire("Error", "No se pudo cargar el contenido.", "error");
+                    }
+                });
+            }
+        });
+    </script>
+</body>
 </html>

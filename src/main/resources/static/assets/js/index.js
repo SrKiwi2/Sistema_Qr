@@ -19,7 +19,7 @@ const encenderCamara = () => {
       scanning = true;
       btnScanQR.hidden = true;
       canvasElement.hidden = false;
-      video.setAttribute("playsinline", true); // required to tell iOS safari we don't want fullscreen
+      video.setAttribute("playsinline", true);
       video.srcObject = stream;
       video.play();
       tick();
@@ -58,167 +58,149 @@ const cerrarCamara = () => {
 };
 
 const activarSonido = () => {
-  var audio = document.getElementById('audioScaner');
+  var audio = document.getElementById("audioScaner");
   audio.play();
-}
+};
 
-//callback cuando termina de leer el codigo QR
 qrcode.callback = (respuestaEncriptada) => {
   if (respuestaEncriptada) {
     Swal.fire({
-      title: 'Consultando QR...',
+      title: "Consultando QR...",
       didOpen: () => {
         Swal.showLoading();
-      }
+      },
     });
 
-    fetch('/entradas/validar', {
-      method: 'POST',
+    fetch("/entradas/validar", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ identificador: respuestaEncriptada }),
     })
-    .then(response => response.json())
-    .then(data => {
-      Swal.close(); // Cerrar el spinner de carga
+      .then((response) => response.json())
+      .then((data) => {
+        Swal.close();
 
-      // Revisar el mensaje que viene del backend y actuar en consecuencia
-      if (data.mensaje === 'aprobado') {
-        Swal.fire('Este QR ya ha sido aprobado');
-      } else if (data.mensaje === 'no_aprobado') {
-        Swal.fire({
-          title: 'Este QR no está aprobado',
-          text: '¿Deseas aprobarlo?',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonText: 'Aprobar',
-          cancelButtonText: 'Cancelar'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Llamar al backend para aprobar el QR
-            aprobarQr(respuestaEncriptada);
-          }
-        });
-      } else if (data.mensaje === 'no_existe') {
-        Swal.fire('El QR no existe, posible falsificación.');
-      }
-    })
-    .catch(error => {
-      console.error('Error validando QR:', error);
-      Swal.fire('Error validando QR', error.message, 'error');
-    });
+        if (data.mensaje === "aprobado") {
+          Swal.fire("Este QR ya ha sido aprobado");
+        } else if (data.mensaje === "no_aprobado") {
+          Swal.fire({
+            title: "Este QR no está aprobado",
+            text: "¿Deseas aprobarlo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Aprobar",
+            cancelButtonText: "Cancelar",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              aprobarQr(respuestaEncriptada);
+            }
+          });
+        } else if (data.mensaje === "no_existe") {
+          Swal.fire("El QR no existe, posible falsificación.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error validando QR:", error);
+        Swal.fire("Error validando QR", error.message, "error");
+      });
 
     // Swal.fire(respuestaEncriptada)
     // activarSonido();
-    // cerrarCamara();    
-
+    // cerrarCamara();
   }
 };
 
-// Función para validar el código introducido manualmente
-// Función para consultar el código introducido manualmente
 const consultarCodigo = () => {
-  const codigoInput = document.getElementById("codigoInput").value.trim(); // Asegúrate de que no haya espacios vacíos
-
-  if (!codigoInput) {
-    Swal.fire('Por favor, introduzca un código.');
-    return;
-  }
-
-  Swal.fire({
-    title: 'Consultando código...',
-    didOpen: () => {
-      Swal.showLoading();
+    console.log("Función consultarCodigo ejecutada");
+    const codigoInput = $('#codigoInput').val().trim();
+    if (!codigoInput) {
+        Swal.fire("Por favor, introduzca un código.");
+        return;
     }
-  });
 
-  fetch('/entradas/validar-codigo', {  // Asegúrate que la ruta aquí sea correcta
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ codigo: codigoInput }),
-  })
-  .then(response => {
-    if (!response.ok) {
-      throw new Error(`Error en la consulta: ${response.status}`);
-    }
-    return response.json();
-  })
-  .then(data => {
-    Swal.close(); // Cerrar el spinner de carga
+    Swal.fire({
+        title: "Consultando código...",
+        didOpen: () => {
+            Swal.showLoading();
+        },
+    });
 
-    // Validación del mensaje del backend
-    if (data.mensaje === 'aprobado') {
-      Swal.fire('Este código ya ha sido aprobado');
-    } else if (data.mensaje === 'no_aprobado') {
-      Swal.fire({
-        title: 'Este código no está aprobado',
-        text: '¿Deseas aprobarlo?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Aprobar',
-        cancelButtonText: 'Cancelar'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          aprobarCodigo(codigoInput); // Llamar a la función de aprobación si el usuario lo confirma
+    $.ajax({
+        url: "/entradas/validar-codigo",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ codigo: codigoInput }),
+        success: function (data) {
+            Swal.close();
+
+            if (data.mensaje === "aprobado") {
+                Swal.fire("Este código ya ha sido aprobado");
+            } else if (data.mensaje === "no_aprobado") {
+                Swal.fire({
+                    title: "Este código no está aprobado",
+                    text: "¿Deseas aprobarlo?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Aprobar",
+                    cancelButtonText: "Cancelar",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        aprobarCodigo(codigoInput);
+                    }
+                });
+            } else if (data.mensaje === "no_existe") {
+                Swal.fire("El código no existe, posible falsificación.");
+            } else {
+                Swal.fire("Respuesta inesperada del servidor");
+            }
+
+            $('#codigoInput').val('');
+        },
+        error: function (xhr, status, error) {
+            console.error("Error validando código:", error);
+            Swal.fire("Error validando código", error, "error");
         }
-      });
-    } else if (data.mensaje === 'no_existe') {
-      Swal.fire('El código no existe, posible falsificación.');
-    } else {
-      Swal.fire('Respuesta inesperada del servidor');
-    }
-
-    // Limpiar el campo de entrada después de la consulta
-    document.getElementById("codigoInput").value = '';
-
-  })
-  .catch(error => {
-    console.error('Error validando código:', error);
-    Swal.fire('Error validando código', error.message, 'error');
-  });
+    });
 };
 
-// Función para aprobar el código manualmente
 const aprobarCodigo = (codigo) => {
-  fetch('/entradas/aprobar-codigo', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ codigo: codigo }),
-  })
-  .then(response => response.json())
-  .then(data => {
-    Swal.fire(data.mensaje);
-  })
-  .catch(error => {
-    console.error('Error aprobando código:', error);
-    Swal.fire('Error aprobando código', error.message, 'error');
-  });
+    $.ajax({
+        url: "/entradas/aprobar-codigo",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ codigo: codigo }),
+        success: function (data) {
+            Swal.fire(data.mensaje);
+        },
+        error: function (xhr, status, error) {
+            console.error("Error aprobando código:", error);
+            Swal.fire("Error aprobando código", error, "error");
+        }
+    });
 };
+
 
 
 const aprobarQr = (identificador) => {
-  fetch('/entradas/aprobar', {
-    method: 'POST',
+  fetch("/entradas/aprobar", {
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({ identificador: identificador }),
   })
-  .then(response => response.json())
-  .then(data => {
-    Swal.fire(data.mensaje); // Mostrar mensaje de aprobación o de error
-  })
-  .catch(error => {
-    console.error('Error aprobando QR:', error);
-    Swal.fire('Error aprobando QR', error.message, 'error');
-  });
+    .then((response) => response.json())
+    .then((data) => {
+      Swal.fire(data.mensaje);
+    })
+    .catch((error) => {
+      console.error("Error aprobando QR:", error);
+      Swal.fire("Error aprobando QR", error.message, "error");
+    });
 };
 
-window.addEventListener('load', (e) => {
+window.addEventListener("load", (e) => {
   encenderCamara();
-})
+});

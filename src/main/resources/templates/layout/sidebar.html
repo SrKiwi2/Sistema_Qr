@@ -1,17 +1,13 @@
-
 <aside th:fragment="sidebar" class="left-sidebar with-vertical">
     <a type="button" class="brand-link text-center active" style="text-decoration: none" id="opcionInicial"> 
         <span class="brand-text font-weight-light">Menu Principal</span>
     </a>
     <nav class="sidebar-nav scroll-sidebar" data-simplebar>
         <ul id="sidebarnav" class="px-2">
-
-
             <li class="nav-small-cap">
                 <iconify-icon icon="solar:menu-dots-bold" class="nav-small-cap-icon fs-4"></iconify-icon>
                 <span class="hide-menu">INICIO</span>
             </li>
-
             <li class="sidebar-item" th:if="${session.nombre_rol == 'ADMNISTRADOR' or session.nombre_rol == 'SUPER USUARIO'}">
                 <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
                     <span class="d-flex">
@@ -34,7 +30,6 @@
                     </li>
                 </ul>
             </li>
-
             <li class="sidebar-item" th:if="${session.nombre_rol == 'ADMNISTRADOR' or session.nombre_rol == 'SUPER USUARIO'}">
                 <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
                     <span class="d-flex">
@@ -51,7 +46,6 @@
                     </li>
                 </ul>
             </li>
-
             <li class="sidebar-item"  th:if="${session.nombre_rol == 'ADMNISTRADOR' or session.nombre_rol == 'SUPER USUARIO' or session.nombre_rol == 'ESCANEADOR'}">
                 <a class="sidebar-link has-arrow" type="button" aria-expanded="false">
                     <span class="d-flex">
@@ -77,87 +71,86 @@
         </ul>
     </nav>
     <script>
+        var botonPulsado;
         $(document).ready(function(){
-            var botonPulsado;
             botonPulsado = document.getElementById("opcionInicial");
-
-            function inicializarSidebar() {
-                $('.has-arrow').off('click').on('click', function (e) {
-                    e.preventDefault();
-
-                    let submenu = $(this).next('ul');
-                    let parentItem = $(this).parent();
-
-                    if (parentItem.hasClass('active')) {
-                        submenu.slideUp();
-                        parentItem.removeClass('active');
-                    } else {
-                        $('.sidebar-item.active').not(parentItem).removeClass('active').children('ul').slideUp();
-                        submenu.slideDown();
-                        parentItem.addClass('active');
-                    }
-                });
-            }
-
-            function cargarContenido(url) {
-                $.ajax({
-                    url: url,
-                    method: 'GET',
-                    success: function(data) {
-                        $('#main-content').html(data);
-                        inicializarSidebar();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error("Error al cargar el contenido:", error);
-                    }
-                });
-            }
-
             $("#opcionesAdminRol").click(function (e){
                 e.preventDefault();
                 cargarContenido("/vista-rol");
-                actualizarActivo("#opcionesAdminRol");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesAdminRol");
+                botonPulsado.classList.add("active");
             });
 
             $("#opcionesAdminUsuario").click(function (e){
                 e.preventDefault();
                 cargarContenido("/administrar_usuario");
-                actualizarActivo("#opcionesAdminUsuario");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesAdminUsuario");
+                botonPulsado.classList.add("active");
             });
 
             $("#opcionesAdminPersona").click(function (e){
                 e.preventDefault();
                 cargarContenido("/vista_persona");
-                actualizarActivo("#opcionesAdminPersona");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesAdminPersona");
+                botonPulsado.classList.add("active");
             });
 
             $("#opcionesListarQR").click(function (e){
                 e.preventDefault();
                 cargarContenido("/listar_qr");
-                actualizarActivo("#opcionesListarQR");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesListarQR");
+                botonPulsado.classList.add("active");
             });
 
             $("#opcionesGenerarQR").click(function (e){
                 e.preventDefault();
                 cargarContenido("/entradas/generarQr");
-                actualizarActivo("#opcionesGenerarQR");
+                if (botonPulsado.classList.contains("active")) {
+                    botonPulsado.classList.remove("active");
+                }
+                botonPulsado = document.getElementById("opcionesGenerarQR");
+                botonPulsado.classList.add("active");
             });
 
             $("#opcionesEscanearQR").click(function (e){
                 e.preventDefault();
                 cargarContenido("/entradas/validacion");
-                actualizarActivo("#opcionesEscanearQR");
-            });
-
-            function actualizarActivo(selector) {
-                if (botonPulsado && botonPulsado.classList.contains("active")) {
+                if (botonPulsado.classList.contains("active")) {
                     botonPulsado.classList.remove("active");
                 }
-                botonPulsado = document.querySelector(selector);
+                botonPulsado = document.getElementById("opcionesEscanearQR");
                 botonPulsado.classList.add("active");
-            }
+            });
 
-            inicializarSidebar();
+            function cargarContenido(url) {
+                const miDiv = document.getElementById("main-content");
+                miDiv.removeAttribute("style");
+                $.ajax({
+                    url: url,
+                    method: "GET",
+                    success: function (data) {
+                        $("#main-content").html(data);
+                        miDiv.setAttribute("style", "opacity: 1; width: 100%; transition: all 0.5s ease-out;"
+                        );
+                    },
+                    error: function (jqXHR, textStatus, errorThrown) {
+                        console.log("Error al cargar contenido: " + textStatus + " " + errorThrown);
+                        Swal.fire("Error", "No se pudo cargar el contenido.", "error");
+                    }
+                });
+            }
         });
     </script>
 </aside>

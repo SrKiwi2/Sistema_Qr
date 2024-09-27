@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr" data-bs-theme="light" data-color-theme="Blue_Theme" data-layout="vertical">
-<body>
+
     <div id="main-wrapper">
         <div class="container-fluid mw-100">
             <div class="row">
@@ -51,7 +49,8 @@
             </div>
         </div>
     </div>
-    <div th:replace="~{layout/script :: script}"></div>
-</body>
-
-</html>
+    <script>
+        $(document).ready(function () {
+            $('#file_export').DataTable();
+         });
+    </script>

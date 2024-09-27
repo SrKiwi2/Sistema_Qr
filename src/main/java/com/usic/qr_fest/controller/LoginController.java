@@ -20,6 +20,12 @@ public class LoginController {
     @Autowired
     private IUsuarioService  usuarioService;
 
+    @GetMapping("/")
+    public String getMethodName() {
+        return "redirect:/form-login";
+    }
+    
+
     @GetMapping(value = "/form-login")
     public String formLogin() {
 
@@ -67,6 +73,6 @@ public class LoginController {
 
             flash.addAttribute("validado", "Se cerro sesion con exito");
         }
-        return "redirect:/vista-test";
+        return "redirect:/";
     }
 }
