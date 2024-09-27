@@ -20,7 +20,7 @@ public interface IEntradaDao extends JpaRepository<Entrada, Long> {
     @Query("SELECT e.idEntrada FROM Entrada e WHERE e.identificador = :identificador")
     Long findIdEntradaByIdentificador(@Param("identificador") String identificador);
 
-    @Query("SELECT e FROM Entrada e ORDER BY e.fechaAprobado DESC NULLS LAST")
+    @Query("SELECT e FROM Entrada e ORDER BY e.fecha_aprobado DESC NULLS LAST")
     List<Entrada> findAllOrderByFechaAprobadoDesc();
     
 }
