@@ -50,4 +50,9 @@ public class EntradaServiceImpl implements IEntradaService{
         return entradaDao.findEstadoByIdentificador(identificador);
     }
 
+    @Override
+    public Long findIdEntradaByIdentificador(Long identificador) {
+        return entradaDao.findIdEntradaByIdentificador(identificador);
+    }
+
 }

@@ -15,4 +15,8 @@ public interface IEntradaDao extends JpaRepository<Entrada, Long> {
     @Query("SELECT e.Estado FROM Entrada e WHERE e.identificador = :identificador")
     String findEstadoByIdentificador(@Param("identificador") String identificador);
 
+    @Query("SELECT e.idEntrada FROM Entrada e WHERE e.identificador = :identificador")
+    Long findIdEntradaByIdentificador(@Param("identificador") Long identificador);
+
+
 }

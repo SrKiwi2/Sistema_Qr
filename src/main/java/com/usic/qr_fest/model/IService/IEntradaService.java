@@ -17,4 +17,5 @@ public interface IEntradaService {
     public Entrada findByIdentificador(String identificador);
     public Entrada findByCodigo(String codigo);
     public String findEstadoByIdentificador(@Param("identificador") String identificador);
+    public Long findIdEntradaByIdentificador(@Param("identificador") Long identificador);
 }
