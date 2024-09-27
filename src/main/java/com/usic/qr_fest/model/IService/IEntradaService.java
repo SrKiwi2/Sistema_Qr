@@ -2,6 +2,7 @@ package com.usic.qr_fest.model.IService;
 
 import java.util.List;
 
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 
 import com.usic.qr_fest.model.Entity.Entrada;
@@ -15,4 +16,5 @@ public interface IEntradaService {
     public void delete(Long idEntrada);
     public Entrada findByIdentificador(String identificador);
     public Entrada findByCodigo(String codigo);
+    public String findEstadoByIdentificador(@Param("identificador") Long identificador);
 }

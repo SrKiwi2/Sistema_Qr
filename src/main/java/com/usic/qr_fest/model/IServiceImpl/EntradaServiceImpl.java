@@ -44,4 +44,9 @@ public class EntradaServiceImpl implements IEntradaService{
     public Entrada findByCodigo(String codigo) {
         return entradaDao.findByCodigo(codigo);
     }
+
+    @Override
+    public String findEstadoByIdentificador(Long identificador) {
+        return entradaDao.findEstadoByIdentificador(identificador);
+    }
 }
