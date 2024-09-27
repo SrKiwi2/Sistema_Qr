@@ -16,5 +16,5 @@ public interface IEntradaService {
     public void delete(Long idEntrada);
     public Entrada findByIdentificador(String identificador);
     public Entrada findByCodigo(String codigo);
-    public String findEstadoByIdentificador(@Param("identificador") Long identificador);
+    public String findEstadoByIdentificador(@Param("identificador") String identificador);
 }

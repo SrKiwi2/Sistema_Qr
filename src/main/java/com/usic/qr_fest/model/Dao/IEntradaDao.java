@@ -13,6 +13,6 @@ public interface IEntradaDao extends JpaRepository<Entrada, Long> {
     Entrada findByCodigo(String codigo);
 
     @Query("SELECT e.Estado FROM Entrada e WHERE e.identificador = :identificador")
-    String findEstadoByIdentificador(@Param("identificador") Long identificador);
+    String findEstadoByIdentificador(@Param("identificador") String identificador);
 
 }
