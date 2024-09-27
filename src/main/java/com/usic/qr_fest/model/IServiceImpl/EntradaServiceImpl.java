@@ -55,4 +55,9 @@ public class EntradaServiceImpl implements IEntradaService{
         return entradaDao.findIdEntradaByIdentificador(identificador);
     }
 
+    @Override
+    public List<Entrada> findAllOrderByFechaAprobadoDesc() {
+        return entradaDao.findAllOrderByFechaAprobadoDesc();
+    }
+
 }

@@ -18,4 +18,5 @@ public interface IEntradaService {
     public Entrada findByCodigo(String codigo);
     public String findEstadoByIdentificador(@Param("identificador") String identificador);
     public Long findIdEntradaByIdentificador(@Param("identificador") String identificador);
+    public List<Entrada> findAllOrderByFechaAprobadoDesc();
 }
