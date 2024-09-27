@@ -1,9 +1,5 @@
 package com.usic.qr_fest.controller;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +42,7 @@ public class PersonaController {
 
     @GetMapping(value = "/listar_qr")
     public String listarEntradas(Model model) {
-        List<Entrada> entradas = entradaService.findAll();
+        List<Entrada> entradas = entradaService.findAllOrderByFechaAprobadoDesc();
         model.addAttribute("entradas", entradas);
         return "/administracion/tabla_entradas";
     }
