@@ -21,9 +21,7 @@ public class CamaraQrController {
     @GetMapping("/camara_qr")
     public String vistaGenerarQr(@RequestParam("codigoEncriptado") String codigoEncriptado, Model model) throws UnsupportedEncodingException {
 
-        // Decodificar el código encriptado para manejar caracteres especiales
-        
-
+       
         String adjustedCodigoEncriptado = codigoEncriptado.replaceAll(" ", "+");
 
         if (entradaService.findIdEntradaByIdentificador(adjustedCodigoEncriptado) != null) {
