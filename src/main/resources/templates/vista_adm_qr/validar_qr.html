@@ -42,11 +42,14 @@
 
 <audio id="audioScaner" src="../assets/sonido.mp3" preload="auto"></audio>
 
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+
 <script>
   // --- Estado y referencias ---
   const video = document.createElement("video");
   const canvasElement = document.getElementById("qr-canvas");
-  const canvas = canvasElement.getContext ? canvasElement.getContext("2d") : null;
+  const canvas = canvasElement?.getContext ? canvasElement.getContext("2d") : null;
 
   const seccionCodigo = document.getElementById("seccionCodigo");
   const seccionCamara = document.getElementById("seccionCamara");
@@ -61,14 +64,14 @@
   let busy = false;      // evitando múltiples lecturas
 
   // --- Cambiar modo (código/cámara) ---
-  modoCodigo.addEventListener("change", () => {
+  modoCodigo?.addEventListener("change", () => {
     if (modoCodigo.checked) {
       seccionCodigo.style.display = "";
       seccionCamara.style.display = "none";
       cerrarCamara();
     }
   });
-  modoCamara.addEventListener("change", () => {
+  modoCamara?.addEventListener("change", () => {
     if (modoCamara.checked) {
       seccionCodigo.style.display = "none";
       seccionCamara.style.display = "";
@@ -83,7 +86,15 @@
       return;
     }
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: "environment" },
+          width:  { ideal: 1280 },
+          height: { ideal: 720 }
+        },
+        audio: false
+      });
+
       scanning = true;
       btnIniciarCam.disabled = true;
       btnDetenerCam.disabled = false;
@@ -96,7 +107,7 @@
       scan();
     } catch (err) {
       console.error("Error al acceder a la cámara: ", err);
-      Swal.fire("Error al acceder a la cámara", err.message || String(err), "error");
+      Swal.fire("Error al acceder a la cámara", (err && (err.name + ": " + err.message)) || String(err), "error");
       btnIniciarCam.disabled = false;
       btnDetenerCam.disabled = true;
     }
@@ -110,99 +121,96 @@
     }
     btnIniciarCam.disabled = false;
     btnDetenerCam.disabled = true;
-    // limpiar el canvas
     if (canvas && canvasElement) {
       canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
     }
   }
 
-  btnIniciarCam.addEventListener("click", encenderCamara);
-  btnDetenerCam.addEventListener("click", cerrarCamara);
+  btnIniciarCam?.addEventListener("click", encenderCamara);
+  btnDetenerCam?.addEventListener("click", cerrarCamara);
 
-  // --- Bucle de pintado / decodificación ---
+  // --- Bucle de pintado del frame ---
   function tick() {
     if (!scanning) return;
-    if (video.readyState >= 2) {
-      // Ajusta tamaño
-      canvasElement.width  = video.videoWidth  || 640;
-      canvasElement.height = video.videoHeight || 480;
+    if (video.readyState >= 2 && video.videoWidth && video.videoHeight) {
+      canvasElement.width  = video.videoWidth;
+      canvasElement.height = video.videoHeight;
       canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
     }
     requestAnimationFrame(tick);
   }
 
+  // --- Decodificación con jsQR ---
   function scan() {
     if (!scanning) return;
+
     try {
-      if (typeof qrcode !== "undefined" && qrcode.decode) {
-        qrcode.decode(); // lazarsoft lee del canvas por id "qr-canvas"
+      if (video.readyState >= 2 && canvasElement.width && canvasElement.height) {
+        const img = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+        const found = jsQR(img.data, img.width, img.height, { inversionAttempts: "dontInvert" });
+        if (found && found.data) {
+          onQrDetected(found.data);
+        }
       }
     } catch (e) {
-      // si no hay QR, la lib lanza excepción, reintentar
+      // ignorar y reintentar
     } finally {
-      setTimeout(scan, 300);
+      setTimeout(scan, 200); // frecuencia de intentos
     }
   }
 
-  // --- Callback de la librería de QR ---
-  if (typeof qrcode !== "undefined") {
-    qrcode.callback = (ident) => {
-      if (!ident || busy) return;
-      busy = true;
+  // --- Manejo cuando se detecta un QR ---
+  function onQrDetected(ident) {
+    if (!ident || busy) return;
+    busy = true;
 
-      // Sonido opcional al detectar
-      audio?.play().catch(()=>{});
+    if (audio) { audio.play().catch(()=>{}); }
 
-      Swal.fire({ title: "Consultando QR...", didOpen: () => Swal.showLoading() });
+    Swal.fire({ title: "Consultando QR...", didOpen: () => Swal.showLoading() });
 
-      fetch("/entradas/validar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ identificador: ident })
-      })
-      .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
-      .then(data => {
-        Swal.close();
+    fetch("/entradas/validar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identificador: ident })
+    })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
+    .then(data => {
+      Swal.close();
 
-        if (data.mensaje === "aprobado") {
-          Swal.fire("Este QR ya ha sido aprobado");
-          // Si quieres detener la cámara tras cada lectura:
-          // cerrarCamara();
-          busy = false;
-        } else if (data.mensaje === "no_aprobado") {
-          Swal.fire({
-            title: "Este QR no está aprobado",
-            text: "¿Deseas aprobarlo?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Aprobar",
-            cancelButtonText: "Cancelar",
-          }).then((res) => {
-            if (res.isConfirmed) {
-              aprobarQr(ident);
-            } else {
-              busy = false;
-            }
-          });
-        } else if (data.mensaje === "no_existe") {
-          Swal.fire("El QR no existe, posible falsificación.");
-          busy = false;
-        } else {
-          Swal.fire("Respuesta inesperada del servidor");
-          busy = false;
-        }
-      })
-      .catch(err => {
-        console.error("Error validando QR:", err);
-        Swal.fire("Error validando QR", err.message || String(err), "error");
+      if (data.mensaje === "aprobado") {
+        Swal.fire("Este QR ya ha sido aprobado");
+        busy = false; // o cerrarCamara();
+      } else if (data.mensaje === "no_aprobado") {
+        Swal.fire({
+          title: "Este QR no está aprobado",
+          text: "¿Deseas aprobarlo?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Aprobar",
+          cancelButtonText: "Cancelar",
+        }).then((res) => {
+          if (res.isConfirmed) {
+            aprobarQr(ident);
+          } else {
+            busy = false;
+          }
+        });
+      } else if (data.mensaje === "no_existe") {
+        Swal.fire("El QR no existe, posible falsificación.");
         busy = false;
-      });
-    };
-  } else {
-    console.warn("qrcode.min.js no está cargado.");
+      } else {
+        Swal.fire("Respuesta inesperada del servidor");
+        busy = false;
+      }
+    })
+    .catch(err => {
+      console.error("Error validando QR:", err);
+      Swal.fire("Error validando QR", err.message || String(err), "error");
+      busy = false;
+    });
   }
 
-  // --- Validación por código (tu flujo actual, mejorado) ---
+  // --- Validación por código (igual que tenías) ---
   function consultarCodigo() {
     const codigoInput = $('#codigoInput').val().trim();
     if (!codigoInput) {
@@ -273,14 +281,12 @@
       body: JSON.stringify({ identificador })
     })
     .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
-    .then(d => {
-      Swal.fire(d.mensaje || "Aprobado");
-    })
+    .then(d => Swal.fire(d.mensaje || "Aprobado"))
     .catch(err => Swal.fire("Error aprobando QR", err.message || String(err), "error"))
     .finally(() => { busy = false; });
   }
 
-  // Por usabilidad: Enter en el input dispara validar
+  // Enter en el input dispara validar
   document.getElementById('codigoInput')?.addEventListener('keyup', (e) => {
     if (e.key === 'Enter') consultarCodigo();
   });
