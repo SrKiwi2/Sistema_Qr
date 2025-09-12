@@ -1,234 +1,290 @@
 <div id="main-wrapper">
-    <div class="container-fluid mw-100">
-        <div class="row">
-            <div class="row justify-content-center mt-5">
-                <div class="col-sm-4 shadow p-3">
-                    <h5 class="text-center">Inspeccionar codigo de boleto</h5>
-                    <!-- <div class="row text-center">
-                        <a id="btn-scan-qr" href="#">
-                            <img src="https://dab1nmslvvntp.cloudfront.net/wp-content/uploads/2017/07/1499401426qr_icon.svg"
-                                class="img-fluid text-center" width="175">
-                        </a>
-                            <canvas hidden="" id="qr-canvas" class="img-fluid"></canvas>
-                    </div> -->
-                    <div class="row mx-5 my-3">
-                        <input type="number" id="codigoInput" class="form-control" placeholder="Ingrese el código del boleto aquí">
-                    </div>
-                    <div class="row mx-5 my-3">
-                        <!-- <button class="btn btn-success btn-sm rounded-3 mb-2" onclick="encenderCamara()">ESCANEAR QR</button>
-                        <button class="btn btn-danger btn-sm rounded-3" onclick="cerrarCamara()">DETENER ESCANEO</button> -->
-                        <button class="btn btn-primary btn-sm rounded-3 mt-3" onclick="consultarCodigo()">VALIDAR CÓDIGO</button>
-                        <script>
-                            //crea elemento
-                            const video = document.createElement("video");
+  <div class="container-fluid mw-100">
+    <div class="row justify-content-center mt-5">
+      <div class="col-sm-6 col-md-5 col-lg-4 shadow p-3 rounded">
+        <h5 class="text-center mb-3">Inspeccionar código de boleto</h5>
 
-                            //nuestro camvas
-                            const canvasElement = document.getElementById("qr-canvas");
-                            const canvas = canvasElement.getContext("2d");
+        <!-- Selector de modo -->
+        <div class="btn-group w-100 mb-3" role="group" aria-label="Modo de validación">
+          <input type="radio" class="btn-check" name="modoValidacion" id="modoCodigo" autocomplete="off" checked>
+          <label class="btn btn-outline-primary" for="modoCodigo">Validar por código</label>
 
-                            //div donde llegara nuestro canvas
-                            const btnScanQR = document.getElementById("btn-scan-qr");
-
-                            //lectura desactivada
-                            let scanning = false;
-
-                            //funcion para encender la camara
-                            function encenderCamara () {
-                            navigator.mediaDevices
-                                .getUserMedia({ video: { facingMode: "environment" } })
-                                .then(function (stream) {
-                                scanning = true;
-                                btnScanQR.hidden = true;
-                                canvasElement.hidden = false;
-                                video.setAttribute("playsinline", true);
-                                video.srcObject = stream;
-                                video.play();
-                                tick();
-                                scan();
-                                })
-                                .catch(function (err) {
-                                console.error("Error al acceder a la cámara: ", err);
-                                alert("Error al acceder a la cámara: " + err.message);
-                                });
-                            };
-
-                            //funciones para levantar las funiones de encendido de la camara
-                            function tick() {
-                            canvasElement.height = video.videoHeight;
-                            canvasElement.width = video.videoWidth;
-                            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
-
-                            scanning && requestAnimationFrame(tick);
-                            }
-
-                            function scan() {
-                            try {
-                                qrcode.decode();
-                            } catch (e) {
-                                setTimeout(scan, 300);
-                            }
-                            }
-
-                            //apagara la camara
-                            function cerrarCamara () {
-                            video.srcObject.getTracks().forEach((track) => {
-                                track.stop();
-                            });
-                            canvasElement.hidden = true;
-                            btnScanQR.hidden = false;
-                            };
-
-                            function activarSonido () {
-                            var audio = document.getElementById("audioScaner");
-                            audio.play();
-                            };
-
-                            qrcode.callback = (respuestaEncriptada) => {
-                            if (respuestaEncriptada) {
-                                Swal.fire({
-                                title: "Consultando QR...",
-                                didOpen: () => {
-                                    Swal.showLoading();
-                                },
-                                });
-
-                                fetch("/entradas/validar", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({ identificador: respuestaEncriptada }),
-                                })
-                                .then((response) => response.json())
-                                .then((data) => {
-                                    Swal.close();
-
-                                    if (data.mensaje === "aprobado") {
-                                    Swal.fire("Este QR ya ha sido aprobado");
-                                    } else if (data.mensaje === "no_aprobado") {
-                                    Swal.fire({
-                                        title: "Este QR no está aprobado",
-                                        text: "¿Deseas aprobarlo?",
-                                        icon: "warning",
-                                        showCancelButton: true,
-                                        confirmButtonText: "Aprobar",
-                                        cancelButtonText: "Cancelar",
-                                    }).then((result) => {
-                                        if (result.isConfirmed) {
-                                        aprobarQr(respuestaEncriptada);
-                                        }
-                                    });
-                                    } else if (data.mensaje === "no_existe") {
-                                    Swal.fire("El QR no existe, posible falsificación.");
-                                    }
-                                })
-                                .catch((error) => {
-                                    console.error("Error validando QR:", error);
-                                    Swal.fire("Error validando QR", error.message, "error");
-                                });
-
-                                // Swal.fire(respuestaEncriptada)
-                                // activarSonido();
-                                // cerrarCamara();
-                            }
-                            };
-
-                            function consultarCodigo () {
-                                console.log("Función consultarCodigo ejecutada");
-                                const codigoInput = $('#codigoInput').val().trim();
-                                if (!codigoInput) {
-                                    Swal.fire("Por favor, introduzca un código.");
-                                    return;
-                                }
-
-                                Swal.fire({
-                                    title: "Consultando código...",
-                                    didOpen: () => {
-                                        Swal.showLoading();
-                                    },
-                                });
-
-                                $.ajax({
-                                    url: "/entradas/validar-codigo",
-                                    method: "POST",
-                                    contentType: "application/json",
-                                    data: JSON.stringify({ codigo: codigoInput }),
-                                    success: function (data) {
-                                        Swal.close();
-
-                                        if (data.mensaje === "aprobado") {
-                                            Swal.fire("Este código ya ha sido aprobado");
-                                        } else if (data.mensaje === "no_aprobado") {
-                                            Swal.fire({
-                                                title: "Este código no está aprobado",
-                                                text: "¿Deseas aprobarlo?",
-                                                icon: "warning",
-                                                showCancelButton: true,
-                                                confirmButtonText: "Aprobar",
-                                                cancelButtonText: "Cancelar",
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    aprobarCodigo(codigoInput);
-                                                }
-                                            });
-                                        } else if (data.mensaje === "no_existe") {
-                                            Swal.fire("El código no existe, posible falsificación.");
-                                        } else {
-                                            Swal.fire("Respuesta inesperada del servidor");
-                                        }
-
-                                        $('#codigoInput').val('');
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error("Error validando código:", error);
-                                        Swal.fire("Error validando código", error, "error");
-                                    }
-                                });
-                            };
-
-                            function aprobarCodigo  (codigo) {
-                                $.ajax({
-                                    url: "/entradas/aprobar-codigo",
-                                    method: "POST",
-                                    contentType: "application/json",
-                                    data: JSON.stringify({ codigo: codigo }),
-                                    success: function (data) {
-                                        Swal.fire(data.mensaje);
-                                    },
-                                    error: function (xhr, status, error) {
-                                        console.error("Error aprobando código:", error);
-                                        Swal.fire("Error aprobando código", error, "error");
-                                    }
-                                });
-                            };
-
-                            function aprobarQr (identificador) {
-                            fetch("/entradas/aprobar", {
-                                method: "POST",
-                                headers: {
-                                "Content-Type": "application/json",
-                                },
-                                body: JSON.stringify({ identificador: identificador }),
-                            })
-                                .then((response) => response.json())
-                                .then((data) => {
-                                Swal.fire(data.mensaje);
-                                })
-                                .catch((error) => {
-                                console.error("Error aprobando QR:", error);
-                                Swal.fire("Error aprobando QR", error.message, "error");
-                                });
-                            };
-
-                            window.addEventListener("load", (e) => {
-                            encenderCamara();
-                            });
-                        </script>
-                    </div>
-                </div>
-            </div>
+          <input type="radio" class="btn-check" name="modoValidacion" id="modoCamara" autocomplete="off">
+          <label class="btn btn-outline-primary" for="modoCamara">Escanear con cámara</label>
         </div>
+
+        <!-- Sección: por código -->
+        <div id="seccionCodigo">
+          <div class="mb-3">
+            <!-- Usa type="text" + inputmode numeric para no perder ceros a la izquierda -->
+            <input type="text" id="codigoInput" class="form-control"
+                   placeholder="Ingrese el código del boleto aquí"
+                   inputmode="numeric" pattern="[0-9]*" autocomplete="one-time-code">
+          </div>
+          <button class="btn btn-primary w-100" onclick="consultarCodigo()">VALIDAR CÓDIGO</button>
+        </div>
+
+        <!-- Sección: por cámara -->
+        <div id="seccionCamara" class="mt-3" style="display:none">
+          <div class="ratio ratio-1x1 border rounded overflow-hidden mb-2" style="background:#111;">
+            <canvas id="qr-canvas" class="w-100 h-100"></canvas>
+          </div>
+          <div class="d-flex gap-2">
+            <button id="btnIniciarCam" class="btn btn-success flex-fill" type="button">Iniciar cámara</button>
+            <button id="btnDetenerCam" class="btn btn-danger flex-fill" type="button" disabled>Detener</button>
+          </div>
+          <small class="text-muted d-block mt-2">Apunta la cámara al código QR. Se detectará automáticamente.</small>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<audio id="audioScaner" src="../assets/sonido.mp3"></audio>
+<audio id="audioScaner" src="../assets/sonido.mp3" preload="auto"></audio>
+
+<script>
+  // --- Estado y referencias ---
+  const video = document.createElement("video");
+  const canvasElement = document.getElementById("qr-canvas");
+  const canvas = canvasElement.getContext ? canvasElement.getContext("2d") : null;
+
+  const seccionCodigo = document.getElementById("seccionCodigo");
+  const seccionCamara = document.getElementById("seccionCamara");
+  const btnIniciarCam = document.getElementById("btnIniciarCam");
+  const btnDetenerCam = document.getElementById("btnDetenerCam");
+  const audio = document.getElementById("audioScaner");
+
+  const modoCodigo = document.getElementById("modoCodigo");
+  const modoCamara = document.getElementById("modoCamara");
+
+  let scanning = false;  // cámara corriendo
+  let busy = false;      // evitando múltiples lecturas
+
+  // --- Cambiar modo (código/cámara) ---
+  modoCodigo.addEventListener("change", () => {
+    if (modoCodigo.checked) {
+      seccionCodigo.style.display = "";
+      seccionCamara.style.display = "none";
+      cerrarCamara();
+    }
+  });
+  modoCamara.addEventListener("change", () => {
+    if (modoCamara.checked) {
+      seccionCodigo.style.display = "none";
+      seccionCamara.style.display = "";
+      encenderCamara();
+    }
+  });
+
+  // --- Cámara: encender / detener ---
+  async function encenderCamara() {
+    if (!canvas) {
+      Swal.fire("Error", "Canvas de QR no disponible en esta vista.", "error");
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: false });
+      scanning = true;
+      btnIniciarCam.disabled = true;
+      btnDetenerCam.disabled = false;
+
+      video.setAttribute("playsinline", true); // evita fullscreen en iOS
+      video.srcObject = stream;
+      await video.play();
+
+      tick();
+      scan();
+    } catch (err) {
+      console.error("Error al acceder a la cámara: ", err);
+      Swal.fire("Error al acceder a la cámara", err.message || String(err), "error");
+      btnIniciarCam.disabled = false;
+      btnDetenerCam.disabled = true;
+    }
+  }
+
+  function cerrarCamara() {
+    scanning = false;
+    if (video.srcObject) {
+      video.srcObject.getTracks().forEach(t => t.stop());
+      video.srcObject = null;
+    }
+    btnIniciarCam.disabled = false;
+    btnDetenerCam.disabled = true;
+    // limpiar el canvas
+    if (canvas && canvasElement) {
+      canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
+    }
+  }
+
+  btnIniciarCam.addEventListener("click", encenderCamara);
+  btnDetenerCam.addEventListener("click", cerrarCamara);
+
+  // --- Bucle de pintado / decodificación ---
+  function tick() {
+    if (!scanning) return;
+    if (video.readyState >= 2) {
+      // Ajusta tamaño
+      canvasElement.width  = video.videoWidth  || 640;
+      canvasElement.height = video.videoHeight || 480;
+      canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function scan() {
+    if (!scanning) return;
+    try {
+      if (typeof qrcode !== "undefined" && qrcode.decode) {
+        qrcode.decode(); // lazarsoft lee del canvas por id "qr-canvas"
+      }
+    } catch (e) {
+      // si no hay QR, la lib lanza excepción, reintentar
+    } finally {
+      setTimeout(scan, 300);
+    }
+  }
+
+  // --- Callback de la librería de QR ---
+  if (typeof qrcode !== "undefined") {
+    qrcode.callback = (ident) => {
+      if (!ident || busy) return;
+      busy = true;
+
+      // Sonido opcional al detectar
+      audio?.play().catch(()=>{});
+
+      Swal.fire({ title: "Consultando QR...", didOpen: () => Swal.showLoading() });
+
+      fetch("/entradas/validar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identificador: ident })
+      })
+      .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
+      .then(data => {
+        Swal.close();
+
+        if (data.mensaje === "aprobado") {
+          Swal.fire("Este QR ya ha sido aprobado");
+          // Si quieres detener la cámara tras cada lectura:
+          // cerrarCamara();
+          busy = false;
+        } else if (data.mensaje === "no_aprobado") {
+          Swal.fire({
+            title: "Este QR no está aprobado",
+            text: "¿Deseas aprobarlo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Aprobar",
+            cancelButtonText: "Cancelar",
+          }).then((res) => {
+            if (res.isConfirmed) {
+              aprobarQr(ident);
+            } else {
+              busy = false;
+            }
+          });
+        } else if (data.mensaje === "no_existe") {
+          Swal.fire("El QR no existe, posible falsificación.");
+          busy = false;
+        } else {
+          Swal.fire("Respuesta inesperada del servidor");
+          busy = false;
+        }
+      })
+      .catch(err => {
+        console.error("Error validando QR:", err);
+        Swal.fire("Error validando QR", err.message || String(err), "error");
+        busy = false;
+      });
+    };
+  } else {
+    console.warn("qrcode.min.js no está cargado.");
+  }
+
+  // --- Validación por código (tu flujo actual, mejorado) ---
+  function consultarCodigo() {
+    const codigoInput = $('#codigoInput').val().trim();
+    if (!codigoInput) {
+      Swal.fire("Por favor, introduzca un código.");
+      return;
+    }
+
+    Swal.fire({ title: "Consultando código...", didOpen: () => Swal.showLoading() });
+
+    $.ajax({
+      url: "/entradas/validar-codigo",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({ codigo: codigoInput }),
+      success: function (data) {
+        Swal.close();
+        if (data.mensaje === "aprobado") {
+          Swal.fire("Este código ya ha sido aprobado");
+        } else if (data.mensaje === "no_aprobado") {
+          Swal.fire({
+            title: "Este código no está aprobado",
+            text: "¿Deseas aprobarlo?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Aprobar",
+            cancelButtonText: "Cancelar",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              aprobarCodigo(codigoInput);
+            }
+          });
+        } else if (data.mensaje === "no_existe") {
+          Swal.fire("El código no existe, posible falsificación.");
+        } else {
+          Swal.fire("Respuesta inesperada del servidor");
+        }
+        $('#codigoInput').val('');
+      },
+      error: function (xhr) {
+        const msg = xhr?.responseJSON?.mensaje || xhr?.statusText || "Error";
+        console.error("Error validando código:", msg);
+        Swal.fire("Error validando código", msg, "error");
+      }
+    });
+  }
+
+  function aprobarCodigo(codigo) {
+    $.ajax({
+      url: "/entradas/aprobar-codigo",
+      method: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({ codigo }),
+      success: function (data) {
+        Swal.fire(data.mensaje || "Operación finalizada");
+      },
+      error: function (xhr) {
+        const msg = xhr?.responseJSON?.mensaje || xhr?.statusText || "Error";
+        console.error("Error aprobando código:", msg);
+        Swal.fire("Error aprobando código", msg, "error");
+      }
+    });
+  }
+
+  function aprobarQr(identificador) {
+    fetch("/entradas/aprobar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identificador })
+    })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP "+r.status)))
+    .then(d => {
+      Swal.fire(d.mensaje || "Aprobado");
+    })
+    .catch(err => Swal.fire("Error aprobando QR", err.message || String(err), "error"))
+    .finally(() => { busy = false; });
+  }
+
+  // Por usabilidad: Enter en el input dispara validar
+  document.getElementById('codigoInput')?.addEventListener('keyup', (e) => {
+    if (e.key === 'Enter') consultarCodigo();
+  });
+
+  // Limpia recursos al salir de la página
+  window.addEventListener('beforeunload', cerrarCamara);
+</script>

@@ -27,7 +27,7 @@ public class Entrada {
 
     private String codigo;
 
-    private String Estado;
+    private String estado;
 
     private Date fecha_aprobado;
 

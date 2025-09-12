@@ -103,6 +103,7 @@ public class EntradaController {
     @PostMapping("/validar-codigo")
     public ResponseEntity<Map<String, String>> validarCodigo(@RequestBody Map<String, String> body) {
         String codigo = body.get("codigo");
+        System.out.println("[VALIDAR-CODIGO] recibido='" + codigo + "' len=" + (codigo == null ? 0 : codigo.length()));
         Map<String, String> response = new HashMap<>();
 
         try {
