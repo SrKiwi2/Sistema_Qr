@@ -19,8 +19,7 @@
                                                     <th>Titulo</th>
                                                     <th>Identificador</th>
                                                     <th>ESTADO</th>
-                                                    <th>Gestionador/a</th>
-                                                    <th>Opciones</th>
+                                                    <th>CODIGO</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -29,10 +28,7 @@
                                                     <td th:text="${e.titulo.titulo}"></td>
                                                     <td th:text="${e.identificador}"></td>
                                                     <td th:text="${e.estado}"></td>
-                                                    <td></td>
-                                                    <td class="text-center">
-                                                        
-                                                    </td>                                                     
+                                                    <td th:text="${e.codigo}"></td>                                            
                                                 </tr>
                                             </tbody>
                                         </table>
