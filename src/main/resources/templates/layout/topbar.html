@@ -1,43 +1,42 @@
-<header th:fragment="topbar" class="topbar card rounded-0 border-0">
-    <div class="with-vertical"><!-- ---------------------------------- -->
-        <!-- Start Vertical Layout Header -->
-        <!-- ---------------------------------- -->
-        <nav class="navbar navbar-expand-lg px-lg-0 px-3 py-0">
-            <!-- Logo -->
-            <div class="d-none d-lg-block">
-                <div class="brand-logo d-flex align-items-center justify-content-between ps-lg-3">
-                    <a href="/vista-administrador" class="text-nowrap logo-img d-flex align-items-center gap-1">
+<header th:fragment="topbar" class="topbar border-0 bg-body">
+    <nav class="navbar navbar-expand-lg navbar-light px-2 px-sm-3 py-2 py-lg-0 shadow-sm">
+            <div class="container-fluid g-0">
+                <!-- Marca: visible en móvil y desktop -->
+                <a href="/vista-administrador" class="navbar-brand d-flex align-items-center gap-2">
+                    <!-- Logo móvil -->
+                    <img src="../assets/images/logos/uapDigitalColor.png" alt="UAP" width="124"
+                        class="d-inline d-lg-none" />
+                    <!-- Logo desktop (claro/oscuro) -->
+                    <span class="d-none d-lg-inline">
+                        <img src="../assets/images/logos/uapDigitalColor.png" alt="UAP" width="178"
+                            class="dark-logo ps-2" />
+                        <img src="../assets/images/logos/uapDigitalBlanco.png" alt="UAP" width="178"
+                            class="light-logo ps-2" />
+                    </span>
+                </a>
 
-                        <!--End Logo icon -->
-                        <!-- Logo text -->
-                        <span class="logo-text">
-                            <!-- dark Logo text -->
-                            <img src="../assets/images/logos/uapDigitalColor.png" alt="homepage" width="178"
-                                class="dark-logo ps-2" />
-                            <!-- Light Logo text -->
-                            <img src="../assets/images/logos/uapDigitalBlanco.png" alt="homepage" width="178"
-                                class="light-logo ps-2" />
-                        </span>
-                    </a>
-                </div>
-            </div>
-            <!-- Fin Logo -->
+                <!-- Toggler de navbar (móvil) -->
+                <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Mostrar menú">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            <!-- Botón de desplegar -->
-            <ul class="navbar-nav ps-xl-3">
-                <li class="nav-item">
-                    <a class="nav-link nav-icon-hover sidebartoggler" id="headerCollapse" href="javascript:void(0)">
-                        <iconify-icon icon="solar:hamburger-menu-line-duotone"></iconify-icon>
-                    </a>
-                </li>
-            </ul>
-            <!-- Botón de desplegar -->
+                <!-- Contenido colapsable -->
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav align-items-center me-auto">
+                        <!-- Hamburguesa lateral (solo desktop) -->
+                        <li class="nav-item d-none d-lg-block">
+                            <a class="nav-link nav-icon-hover sidebartoggler" id="headerCollapse"
+                                href="javascript:void(0)">
+                                <iconify-icon icon="solar:hamburger-menu-line-duotone"></iconify-icon>
+                            </a>
+                        </li>
+                    </ul>
 
-            <!-- Card de perfíl de usuario -->
-            <div class="collapse navbar-collapse justify-content-end pe-2" id="navbarNav">
-                <div class="d-flex align-items-center justify-content-between">
-                    <ul class="navbar-nav flex-row mx-auto align-items-center justify-content-center">
-                        <li class="nav-item">
+                    <ul class="navbar-nav align-items-center ms-auto gap-1">
+                        <!-- Toggle tema (visible también en móvil) -->
+                        <li class="nav-item d-flex">
                             <a class="nav-link nav-icon-hover moon dark-layout" href="javascript:void(0)">
                                 <iconify-icon icon="solar:moon-line-duotone" class="moon"></iconify-icon>
                             </a>
@@ -45,89 +44,48 @@
                                 <iconify-icon icon="solar:sun-2-line-duotone" class="sun"></iconify-icon>
                             </a>
                         </li>
-                        <!-- ------------------------------- -->
-                        <!-- start profile Dropdown -->
-                        <!-- ------------------------------- -->
+
+                        <!-- Usuario -->
                         <li class="nav-item dropdown">
-                            <a class="nav-link nav-icon-hover" href="javascript:void(0)" id="drop2"
+                            <a class="nav-link nav-icon-hover d-flex align-items-center" href="#" id="drop2"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="../assets/images/profile/user-1.jpg" alt="user" width="30"
                                     class="profile-pic rounded-circle" />
                             </a>
-                            <div class="dropdown-menu pt-0 content-dd overflow-hidden pt-0 dropdown-menu-end user-dd animated flipInY"
+
+                            <div class="dropdown-menu dropdown-menu-end p-0 user-dd animated flipInY"
                                 aria-labelledby="drop2">
                                 <div class="profile-dropdown position-relative" data-simplebar>
-                                    <div class="py-3 px-7 pb-0">
+                                    <div class="py-3 px-4 pb-0">
                                         <h5 class="mb-0 fs-5 fw-semibold">Perfil de Usuario</h5>
                                     </div>
-                                    <div class="d-flex align-items-center py-9 mx-7 border-bottom">
-                                        <img src="../assets/images/profile/user-1.jpg" class="rounded-circle" width="80"
-                                            height="80" alt="" />
+
+                                    <div class="d-flex align-items-center py-4 px-4 border-bottom">
+                                        <img src="../assets/images/profile/user-1.jpg" class="rounded-circle" width="64"
+                                            height="64" alt="" />
                                         <div class="ms-3">
-                                            <h5 class="mb-1 fs-4" th:text="${session.persona.nombre}">Tania Andrew</h5>
-                                            <span class="mb-1 d-block" th:switch="${session.usuario.rol.nombreRol}">
+                                            <h5 class="mb-1 fs-6" th:text="${session.persona.nombre}">Usuario</h5>
+                                            <span class="d-block" th:switch="${session.usuario.rol.nombreRol}">
                                                 <span th:case="'SUPER USUARIO'">Rol: Super Usuario</span>
                                                 <span th:case="'ADMINISTRADOR'">Rol: Administrador</span>
+                                                <span th:case="*">Rol: <span
+                                                        th:text="${session.usuario.rol.nombreRol}">Otro</span></span>
                                             </span>
                                         </div>
                                     </div>
-                                    <div class="message-body">
-                                        <a href="../main/page-user-profile.html"
-                                            class="py-8 px-7 mt-8 d-flex align-items-center">
-                                            <span
-                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
-                                                <iconify-icon icon="solar:user-circle-line-duotone"></iconify-icon>
-                                            </span>
-                                            <div class="w-75 d-inline-block v-middle ps-3">
-                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Profile</h6>
-                                                <span class="fs-2 d-block text-body-secondary">Account Settings</span>
-                                            </div>
-                                        </a>
-                                        <a href="../main/app-email.html" class="py-8 px-7 d-flex align-items-center">
-                                            <span
-                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
-                                                <iconify-icon icon="solar:inbox-line-line-duotone"></iconify-icon>
-                                            </span>
-                                            <div class="w-75 d-inline-block v-middle ps-3">
-                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Inbox</h6>
-                                                <span class="fs-2 d-block text-body-secondary">Messages & Emails</span>
-                                            </div>
-                                        </a>
-                                        <a href="../main/app-notes.html" class="py-8 px-7 d-flex align-items-center">
-                                            <span
-                                                class="d-flex align-items-center justify-content-center bg-primary-subtle rounded p-6 fs-7 text-primary">
-                                                <iconify-icon
-                                                    icon="solar:checklist-minimalistic-line-duotone"></iconify-icon>
-                                            </span>
-                                            <div class="w-75 d-inline-block v-middle ps-3">
-                                                <h6 class="mb-1 fs-3 fw-semibold lh-base">My Task</h6>
-                                                <span class="fs-2 d-block text-body-secondary">To-do and Daily
-                                                    Tasks</span>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="d-grid py-4 px-7 pt-8">
+
+                                    <div class="d-grid py-3 px-4">
                                         <a href="/cerrar_sesion" class="btn btn-primary">Cerrar Sesión</a>
                                     </div>
                                 </div>
-
                             </div>
                         </li>
-
-                        <!-- ------------------------------- -->
-                        <!-- end profile Dropdown -->
-                        <!-- ------------------------------- -->
                     </ul>
+
                 </div>
             </div>
-            <!-- Fin Card de perfíl de usuario -->
         </nav>
-        <script>
-            function handleColorTheme(e) {
-                $("html").attr("data-color-theme", e);
-                $(e).prop("checked", !0);
-            }
-        </script>
+
         <button
             class="btn btn-primary p-3 rounded-circle d-flex align-items-center justify-content-center customizer-btn"
             type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample"
@@ -291,6 +249,10 @@
                 </div>
             </div>
         </div>
-
-    </div>
+    <script>
+        function handleColorTheme(e) {
+            $("html").attr("data-color-theme", e);
+            $(e).prop("checked", !0);
+        }
+    </script>
 </header>

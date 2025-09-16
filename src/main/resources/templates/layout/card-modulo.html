@@ -1,17 +1,19 @@
-<!-- Definición del fragmento -->
 <div th:fragment="cardFragment(title, homeText, homeHref, currentText)">
-    <div class="font-weight-medium shadow-none position-relative overflow-hidden mb-4 card">
-        <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center">
-                <h4 class="font-weight-medium mb-0"><span class="lstick d-inline-block align-middle"></span>
+    <div class="card shadow-none mb-3 mb-sm-4">
+        <div class="card-body py-3 py-sm-4">
+            <div
+                class="d-flex flex-column flex-sm-row gap-2 align-items-start align-items-sm-center justify-content-between">
+                <h4 class="mb-0 text-center text-sm-start">
+                    <span class="lstick d-inline-block align-middle me-2"></span>
                     <span th:text="${title}">Dashboard</span>
                 </h4>
-                <nav aria-label="breadcrumb" class="d-flex align-items-center">
-                    <ol class="breadcrumb">
+                <nav aria-label="breadcrumb" class="w-100 w-sm-auto">
+                    <ol class="breadcrumb mb-0 justify-content-center justify-content-sm-end">
                         <li class="breadcrumb-item">
-                            <a class="text-primary text-decoration-none" th:href="${homeHref}" th:text="${homeText}">Home</a>
+                            <a class="text-primary text-decoration-none" th:href="${homeHref}"
+                                th:text="${homeText}">Inicio</a>
                         </li>
-                        <li class="breadcrumb-item" aria-current="page" th:text="${currentText}">Mundo</li>
+                        <li class="breadcrumb-item active" aria-current="page" th:text="${currentText}">Actual</li>
                     </ol>
                 </nav>
             </div>

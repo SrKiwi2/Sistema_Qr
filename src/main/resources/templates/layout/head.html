@@ -24,4 +24,25 @@
 
 
     <title>Sistema QR | UAP</title>
+
+    <style>
+        /* Altura y espaciado cómodo en móvil */
+        .topbar .navbar { min-height: 5px; }
+        @media (max-width: 575.98px) {
+            .topbar .navbar { padding-top: .50rem; padding-bottom: .50rem; }
+        }
+
+        /* Muestra el logo correcto según tema */
+        [data-bs-theme="light"] .light-logo { display: none !important; }
+        [data-bs-theme="dark"]  .dark-logo  { display: none !important; }
+
+        /* Separación visual entre topbar y el primer card en móvil */
+        .topbar + .container .card:first-child { margin-top: .75rem; }
+
+        /* Evita que el breadcrumb rompa el layout en pantallas chicas */
+        @media (max-width: 575.98px) {
+            .breadcrumb { font-size: .9rem; }
+        }
+    </style>
+
 </head>
