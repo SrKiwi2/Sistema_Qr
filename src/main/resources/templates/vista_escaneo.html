@@ -100,7 +100,7 @@
         // --- Referencias y estado ---
         const video = document.createElement("video");
         const canvasElement = document.getElementById("qr-canvas");
-        const canvas = canvasElement?.getContext ? canvasElement.getContext("2d") : null;
+        const canvas = canvasElement?.getContext ? canvasElement.getContext("2d", { willReadFrequently: true }) : null;
 
         const seccionCodigo = document.getElementById("seccionCodigo");
         const seccionCamara = document.getElementById("seccionCamara");
@@ -113,20 +113,25 @@
         const codigoInput = document.getElementById("codigoInput");
         const qrBox = document.getElementById("qrBox");
 
+        // Canvas OFFSCREEN para escanear (más chico = más rápido)
+        const scanCanvas = document.createElement("canvas");
+        const scanCtx = scanCanvas.getContext("2d", { willReadFrequently: true });
+
         let scanning = false; // cámara corriendo
         let busy = false;     // evitando múltiples lecturas
+        let scanLoopTimer = null;
 
-        // --- Aspect ratio responsive del canvas (4:3 móvil, 1:1 md+) ---
-        function syncAspect() {
-            if (!qrBox) return;
-            const mdUp = window.matchMedia("(min-width: 768px)").matches;
-            // Bootstrap ratio usa --bs-aspect-ratio
-            qrBox.style.setProperty("--bs-aspect-ratio", mdUp ? "100%" : "75%");
+        if (canvas) canvas.imageSmoothingEnabled = false;
+        if (scanCtx) scanCtx.imageSmoothingEnabled = false;
+
+        // --- Helpers de ratio ---
+        function setBoxRatioFromVideo() {
+            if (!qrBox || !video.videoWidth || !video.videoHeight) return;
+            const ratioPct = (video.videoHeight / video.videoWidth) * 100; // h/w * 100%
+            qrBox.style.setProperty("--bs-aspect-ratio", `${ratioPct.toFixed(2)}%`);
         }
-        syncAspect();
-        window.addEventListener("resize", syncAspect);
 
-        // --- Mostrar/ocultar secciones accesible ---
+        // --- Mostrar/ocultar secciones accesibles ---
         function mostrarCodigo() {
             seccionCodigo.hidden = false;
             seccionCamara.hidden = true;
@@ -139,11 +144,10 @@
             encenderCamara();
         }
 
-        // Estado inicial según radio (por si el HTML cambia)
+        // Estado inicial
         if (modoCodigo?.checked) mostrarCodigo();
         if (modoCamara?.checked) mostrarCamara();
 
-        // Cambios de modo
         modoCodigo?.addEventListener("change", e => e.target.checked && mostrarCodigo());
         modoCamara?.addEventListener("change", e => e.target.checked && mostrarCamara());
 
@@ -154,11 +158,12 @@
             return;
             }
             try {
+            // Baja un poco la resolución ideal para fluidez; el contenedor mostrará nítido igual
             const stream = await navigator.mediaDevices.getUserMedia({
                 video: {
                 facingMode: { ideal: "environment" },
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
+                width: { ideal: 960, max: 1280 },
+                height: { ideal: 540, max: 720 }
                 },
                 audio: false
             });
@@ -169,10 +174,24 @@
 
             video.setAttribute("playsinline", true); // evita fullscreen iOS
             video.srcObject = stream;
+
+            // Espera metadata para conocer dimensiones reales
+            await new Promise(res => {
+                const ready = () => res();
+                video.addEventListener("loadedmetadata", ready, { once: true });
+                video.addEventListener("resize", ready, { once: true });
+            });
+
             await video.play();
 
-            tick();
-            scan();
+            // Ajusta el contenedor al ratio real del stream (evita estirado)
+            setBoxRatioFromVideo();
+
+            // Empieza a pintar frames (display) usando requestVideoFrameCallback si existe
+            startDrawingLoop();
+
+            // Empieza el escaneo en baja resolución offscreen
+            startScanLoop();
             } catch (err) {
             console.error("Error al acceder a la cámara: ", err);
             Swal.fire(
@@ -187,12 +206,15 @@
 
         function cerrarCamara() {
             scanning = false;
+            if (scanLoopTimer) { clearTimeout(scanLoopTimer); scanLoopTimer = null; }
+
             if (video.srcObject) {
             video.srcObject.getTracks().forEach(t => t.stop());
             video.srcObject = null;
             }
             btnIniciarCam.disabled = false;
             btnDetenerCam.disabled = true;
+
             if (canvas && canvasElement) {
             canvas.clearRect(0, 0, canvasElement.width, canvasElement.height);
             }
@@ -210,33 +232,70 @@
             }
         });
 
-        // --- Pintado del frame ---
-        function tick() {
-            if (!scanning) return;
-            if (video.readyState >= 2 && video.videoWidth && video.videoHeight) {
-            // Resolución interna = del stream; CSS manda para el tamaño visual
+        // Recalcular ratio en cambio de orientación
+        window.addEventListener("orientationchange", () => {
+            setTimeout(() => {
+            if (scanning) setBoxRatioFromVideo();
+            }, 250);
+        });
+
+        // --- Pintado del frame (display) ---
+        function drawToCanvas() {
+            if (!scanning || !video.videoWidth || !video.videoHeight) return;
+            // Canvas interno = dimensiones reales del frame (sin distorsión)
+            if (canvasElement.width !== video.videoWidth) {
             canvasElement.width = video.videoWidth;
             canvasElement.height = video.videoHeight;
-            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
             }
-            requestAnimationFrame(tick);
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
         }
 
-        // --- Decodificación con jsQR ---
-        function scan() {
-            if (!scanning) return;
+        function startDrawingLoop() {
+            const hasRVFC = "requestVideoFrameCallback" in HTMLVideoElement.prototype;
+            if (hasRVFC) {
+            const step = () => {
+                if (!scanning) return;
+                drawToCanvas();
+                // @ts-ignore
+                video.requestVideoFrameCallback(step);
+            };
+            // @ts-ignore
+            video.requestVideoFrameCallback(step);
+            } else {
+            const step = () => {
+                if (!scanning) return;
+                drawToCanvas();
+                requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+            }
+        }
 
+        // --- Escaneo con jsQR en baja resolución (offscreen) ---
+        function startScanLoop() {
+            const targetW = 480; // ancho de procesamiento (~12–15fps con móviles comunes)
+            const vw = video.videoWidth || 1280;
+            const vh = video.videoHeight || 720;
+            const ar = vh / vw;
+            const targetH = Math.max(1, Math.round(targetW * ar));
+
+            scanCanvas.width = targetW;
+            scanCanvas.height = targetH;
+
+            const loop = () => {
+            if (!scanning) return;
             try {
-            if (video.readyState >= 2 && canvasElement.width && canvasElement.height) {
-                const img = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                scanCtx.drawImage(video, 0, 0, targetW, targetH);
+                const img = scanCtx.getImageData(0, 0, targetW, targetH);
                 const found = jsQR(img.data, img.width, img.height, { inversionAttempts: "dontInvert" });
                 if (found && found.data) onQrDetected(found.data);
+            } catch (_) { /* ignorar */ }
+            finally {
+                // ~12.5 fps de decodificación; sube/baja si quieres más/menos CPU
+                scanLoopTimer = setTimeout(loop, 80);
             }
-            } catch (_) {
-            /* ignorar y reintentar */
-            } finally {
-            setTimeout(scan, 200); // frecuencia de intentos
-            }
+            };
+            loop();
         }
 
         // --- Manejo cuando se detecta un QR ---
@@ -245,7 +304,7 @@
             busy = true;
 
             // Feedback
-            if (audio) audio.play().catch(() => {});
+            audio?.play().catch(() => {});
             if (navigator.vibrate) navigator.vibrate(80);
 
             Swal.fire({ title: "Consultando QR...", didOpen: () => Swal.showLoading() });
@@ -292,14 +351,13 @@
             });
         }
 
-        // --- Validación por código (sin cambios funcionales) ---
+        // --- Validación por código (igual que antes, con fallback fetch) ---
         window.consultarCodigo = function consultarCodigo() {
             const codigo = (window.$ ? $("#codigoInput").val() : codigoInput?.value || "").trim();
             if (!codigo) { Swal.fire("Por favor, introduzca un código."); return; }
 
             Swal.fire({ title: "Consultando código...", didOpen: () => Swal.showLoading() });
 
-            // Con jQuery si está disponible; si no, usa fetch
             if (window.$) {
             $.ajax({
                 url: "/entradas/validar-codigo",
@@ -413,6 +471,7 @@
         window.addEventListener("beforeunload", cerrarCamara);
         })();
     </script>
+
 </body>
 
 </html>
