@@ -53,4 +53,19 @@ public class validacionBoletosController {
     public String fexpoUapV1() {
         return "boletos/venta/fexpo";
     }
+
+    @GetMapping(value = "/fexpo-administrativo")
+    public String fexpoUapAdmin() {
+        return "boletos/venta/fexpoAdmin";
+    }
+
+    @GetMapping(value = "/fexpo-docente")
+    public String fexpoUapDocente() {
+        return "boletos/venta/fexpoDocente";
+    }
+
+    @GetMapping(value = "/estacionamiento")
+    public String estacionamiento() {
+        return "boletos/venta/estacionamiento";
+    }
 }
