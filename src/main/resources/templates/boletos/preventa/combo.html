@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Combo Triple — Pre Venta</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root{
+      --uap-blue:#0d47a1; --uap-blue-2:#1976d2; --uap-gold:#f3c543;
+      --text:#e8ecf6; --muted:#a9b3c9; --glass: rgba(10,16,32,.55);
+      --ok:#2ecc71; --ink:#0b1020;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; color:var(--text);
+      font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+      background:
+        radial-gradient(1200px 800px at 10% 10%, #16213e 0%, #0b1020 45%),
+        linear-gradient(135deg,var(--uap-blue),#0a2458 40%, #0b1020 80%);
+      overflow-x:hidden;
+    }
+
+    /* fondo animado */
+    .orb{
+      position:fixed; inset:auto -10% -20% auto; width:70vmax; height:70vmax;
+      background: radial-gradient(closest-side, #1e88e5aa, transparent 70%);
+      filter: blur(60px); animation: float 12s ease-in-out infinite alternate;
+      pointer-events:none; z-index:0;
+    }
+    .orb.orb2{ inset: -20% auto auto -10%; background: radial-gradient(closest-side, #ef5350aa, transparent 70%); animation-duration: 16s}
+    @keyframes float{ from{transform:translateY(0)} to{transform:translateY(-40px)} }
+
+    .wrap{ position:relative; z-index:1; min-height:100%; display:grid; place-items:center; padding:24px }
+
+    /* marca UAP */
+    .brand{ display:flex; align-items:center; gap:12px; margin-bottom:16px; opacity:.95 }
+    .brand .escudo{
+      width:44px; height:44px; border-radius:12px; background:linear-gradient(135deg,var(--uap-gold),#ffdca8);
+      display:grid; place-items:center; color:#4a2e00; font-weight:900; box-shadow:0 6px 18px rgba(243,197,67,.35);
+      user-select:none;
+    }
+    .brand .txt{ display:flex; flex-direction:column; line-height:1.05 }
+    .brand .txt small{ color:var(--muted); font-weight:600; letter-spacing:.06em }
+    .brand .txt strong{ font-size:1.05rem; letter-spacing:.02em }
+
+    .card{
+      width:min(1150px, 96vw); border-radius:28px;
+      background:linear-gradient(180deg, var(--glass), rgba(15,22,41,.75));
+      border:1px solid rgba(255,255,255,.09);
+      box-shadow: 0 10px 30px rgba(25,118,210,.35), inset 0 1px 0 rgba(255,255,255,.06);
+      backdrop-filter: blur(14px); padding:22px; overflow:hidden;
+    }
+
+    /* cinta validación */
+    .ribbon{ display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px;
+      background:linear-gradient(90deg,#00c853,#2ecc71); color:#0b2a12; font-weight:900; text-transform:uppercase; letter-spacing:.08em;
+      box-shadow:0 8px 18px rgba(46,204,113,.28); font-size:.9rem; }
+    .ribbon svg{ width:18px; height:18px }
+
+    /* encabezado hero */
+    .hero{
+      margin-top:12px; display:flex; flex-direction:column; gap:8px;
+    }
+    .hero-title{
+      margin:0; font-weight:900; line-height:1.02;
+      font-size:clamp(2rem, 7vw, 3.2rem); letter-spacing:.01em; display:flex; flex-wrap:wrap; gap:.55rem; align-items:center;
+      text-wrap:balance;
+    }
+    .hero-title .combo{
+      background:conic-gradient(from 180deg at 50% 50%, #e3f2fd, #fff, #bbdefb, #e3f2fd);
+      background-size:200% 200%;
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      animation:shine 6s linear infinite; position:relative; padding:0 .06em;
+      text-shadow:0 10px 30px rgba(25,118,210,.25);
+    }
+    .hero-title .combo::after{
+      content:""; position:absolute; left:0; right:0; bottom:-6px; height:6px; border-radius:6px;
+      background:linear-gradient(90deg,#ffd54f,#ff8a65,#64b5f6); filter:blur(5px); opacity:.55;
+    }
+    .pre-badge{
+      display:inline-block; padding:.38rem .75rem; border-radius:999px; font-size:clamp(.78rem, 2.2vw, .92rem);
+      font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#05240f;
+      background:linear-gradient(90deg,#81c784,#a5d6a7); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 18px rgba(46,204,113,.28);
+    }
+    @keyframes shine{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+
+    .lineup{
+      display:flex; flex-wrap:wrap; gap:.4rem; align-items:center;
+      font-weight:800; letter-spacing:.02em; font-size:clamp(1rem, 3.6vw, 1.35rem);
+    }
+    .lineup .artist-pill{
+      display:inline-flex; align-items:center; gap:.5rem; padding:.35rem .7rem; border-radius:999px;
+      border:1px solid rgba(255,255,255,.15); background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    }
+    .tagline{ font-style:italic; color:#c9d6ff; opacity:.95; font-size:clamp(.95rem,2.4vw,1.05rem); margin:2px 0 0 0 }
+
+    /* marquee decorativo */
+    .marquee{
+      margin-top:8px; overflow:hidden; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(90deg, transparent, rgba(25,118,210,.12), transparent);
+    }
+    .marquee .track{
+      display:flex; gap:2rem; padding:.55rem 1rem; white-space:nowrap;
+      animation: slide 18s linear infinite;
+      font-weight:700; color:#dfe7ff; opacity:.85; letter-spacing:.08em; text-transform:uppercase; font-size:.78rem;
+    }
+    @keyframes slide{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+    .grid{ display:grid; gap:22px; margin-top:22px; grid-template-columns: 1.1fr .9fr }
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr } }
+
+    /* imagen central del combo */
+    .media{
+      position:relative; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.08);
+      background:#0a142a; aspect-ratio: 16/9; display:grid; place-items:center;
+    }
+    .media img{ width:100%; height:100%; object-fit:cover; object-position:center; transform:scale(1.02); transition:transform .6s }
+    .media:hover img{ transform:scale(1.05) }
+
+    /* panel verificación */
+    .verify{
+      display:grid; gap:16px; padding:18px; border-radius:20px;
+      background:linear-gradient(180deg, rgba(12,22,45,.6), rgba(12,22,45,.35));
+      border:1px dashed rgba(255,255,255,.18); position:relative;
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:14px;
+      background:linear-gradient(90deg,#81c784,#a5d6a7); color:#05240f; font-weight:900; text-transform:uppercase; letter-spacing:.06em;
+      width:max-content;
+    }
+    .badge svg{ width:20px; height:20px }
+    .msg{ font-size:1.05rem; color:#eaf5ff }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap }
+    .chip{
+      border:1px solid rgba(255,255,255,.12); color:#dfe7ff; padding:6px 10px; border-radius:999px; font-size:.78rem; letter-spacing:.02em;
+      backdrop-filter: blur(6px);
+    }
+    .actions{ display:flex; gap:10px; flex-wrap:wrap }
+    .btn{
+      display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.15);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)); color:#fff; text-decoration:none; font-weight:800; cursor:pointer;
+      transition:transform .15s ease, box-shadow .2s ease;
+    }
+    .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px rgba(255,255,255,.06) }
+    .btn.primary{ border-color: transparent; background:linear-gradient(90deg, var(--uap-blue-2), #3f51b5) }
+
+    /* tarjetas artistas */
+    .artists{
+      display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:18px;
+    }
+    @media (max-width:720px){ .artists{ grid-template-columns:1fr } }
+    .artist-card{
+      display:flex; gap:12px; align-items:center; padding:12px; border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+      backdrop-filter: blur(6px);
+    }
+    .artist-card img{
+      width:54px; height:54px; border-radius:12px; object-fit:cover; border:1px solid rgba(255,255,255,.12);
+    }
+    .artist-card .name{ font-weight:800; letter-spacing:.02em }
+
+    /* holograma de seguridad */
+    .holo{
+      position:absolute; right:14px; top:14px; width:72px; height:72px; border-radius:50%;
+      background: conic-gradient(from 0deg, #a5d6a7, #bbdefb, #ffd54f, #ffab91, #a5d6a7);
+      mix-blend-mode: screen; filter: blur(.2px); animation:spin 6s linear infinite;
+      border:1px solid rgba(255,255,255,.35); box-shadow:0 6px 18px rgba(0,0,0,.25) inset;
+    }
+    @keyframes spin{ to{ transform: rotate(360deg) } }
+
+    /* watermark */
+    .watermark{
+      position:absolute; inset:auto 0 -14px 0; text-align:center; pointer-events:none; opacity:.06; font-weight:900;
+      font-size: clamp(3rem, 16vw, 8rem); letter-spacing:.1em; color:#ffffff;
+    }
+
+    .micro{
+      font-size:.62rem; letter-spacing:.08em; color:#9fb2ff; opacity:.9;
+      background:linear-gradient(90deg,transparent, rgba(25,118,210,.15), transparent);
+      padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.08);
+    }
+  </style>
+</head>
+<body>
+  <div class="orb"></div><div class="orb orb2"></div>
+
+  <main class="wrap">
+    <!-- Marca institucional -->
+    <header class="brand">
+      <div class="escudo">UAP</div>
+      <div class="txt">
+        <small>Universidad Amazónica de Pando</small>
+        <strong>Organización oficial del evento</strong>
+      </div>
+    </header>
+
+    <section class="card" role="region" aria-label="Boleto combo validado">
+      <span class="ribbon" title="Boleto verificado">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M20 7L9 18l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Boleto combo validado y único
+      </span>
+
+      <!-- Título principal -->
+      <div class="hero">
+        <h1 class="hero-title">
+          <span class="combo">COMBO TRIPLE</span>
+          <span class="pre-badge">PRE VENTA</span>
+        </h1>
+        <div class="lineup">
+          <span class="artist-pill" id="a1">MARA SANTOS</span>
+          <span>×</span>
+          <span class="artist-pill" id="a2">JOSECA</span>
+          <span>×</span>
+          <span class="artist-pill" id="a3">EUPHORIA</span>
+        </div>
+        <p class="tagline">“ESCRIBIENDO UNA NUEVA HSITORIA CON VOS”</p>
+
+        <!-- Marquee marketing -->
+        <div class="marquee" aria-hidden="true">
+          <div class="track" id="marqueeTrack">
+            COMBO • 3 ARTISTAS • ENTRADA ÚNICA • VALIDADO • COMBO • 3 ARTISTAS • ENTRADA ÚNICA • VALIDADO •
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- IMAGEN CENTRAL DEL COMBO -->
+        <figure class="media" aria-label="Imagen del combo">
+          <!-- Reemplazá la ruta (o usa Thymeleaf con th:src) -->
+          <img id="comboImagen" src="/img/eventos/combo-triple.jpg" alt="Combo Triple - Mara Santos, Joseca y Euphoria">
+        </figure>
+
+        <!-- PANEL DE VERIFICACIÓN -->
+        <div class="verify">
+          <div class="holo" aria-hidden="true"></div>
+
+          <span class="badge" aria-label="Verificación exitosa">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 7L9 18l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            QR VÁLIDO — COMBO 3 EN 1
+          </span>
+
+          <p class="msg">
+            Acceso verificado para el <strong>Combo Triple</strong>. Este pase incluye la entrada a las presentaciones de
+            <strong id="a1b">Mara Santos</strong>, <strong id="a2b">Joseca</strong> y <strong id="a3b">Euphoria</strong>.  
+            La validación es realizada por el sistema oficial de la <strong>Universidad Amazónica de Pando</strong>.
+          </p>
+
+          <div class="chips">
+            <span class="chip">Acceso a tres shows</span>
+            <span class="chip">Ingreso único</span>
+            <span class="chip">No transferible</span>
+            <span class="chip">Validación online</span>
+            <span class="chip">Control de seguridad</span>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" onclick="window.print()" type="button" title="Imprimir confirmación">
+              <!-- icono imprimir -->
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 7V3h10v4M6 17H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2M7 17h10v4H7v-4Z" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              Imprimir confirmación
+            </button>
+          </div>
+
+          <div class="micro">
+            Presentá el boleto físico con el QR original. La manipulación o duplicación anula el ingreso. El personal podrá solicitar tu documento de identidad.
+          </div>
+        </div>
+      </div>
+
+      <!-- Mini tarjetas de artistas (imágenes opcionales por URL) -->
+      <div class="artists">
+        <div class="artist-card">
+          <img id="img1" src="/img/eventos/mara.jpg" alt="Mara Santos">
+          <div class="name" id="a1c">Mara Santos</div>
+        </div>
+        <div class="artist-card">
+          <img id="img2" src="/img/eventos/joseca.jpg" alt="Joseca">
+          <div class="name" id="a2c">Joseca</div>
+        </div>
+        <div class="artist-card">
+          <img id="img3" src="/img/eventos/euphoria.jpg" alt="Euphoria">
+          <div class="name" id="a3c">Euphoria</div>
+        </div>
+      </div>
+
+      <div class="watermark">UAP</div>
+    </section>
+  </main>
+
+  <script>
+    // Personalización por URL:
+    // ?a1=Mara%20Santos&a2=Joseca&a3=Euphoria&img=/ruta/combo.jpg&img1=/ruta/mara.jpg&img2=/ruta/joseca.jpg&img3=/ruta/euphoria.jpg
+    (function(){
+      const qs = new URLSearchParams(location.search);
+      const setText = (id, val) => { const el = document.getElementById(id); if(el && val) el.textContent = val; };
+      const up = s => (s||"").toUpperCase();
+
+      const a1 = qs.get('a1') || 'Mara Santos';
+      const a2 = qs.get('a2') || 'Joseca';
+      const a3 = qs.get('a3') || 'Euphoria';
+
+      // Actualiza nombres en todos los lugares
+      setText('a1', up(a1));
+      setText('a2', up(a2));
+      setText('a3', up(a3));
+      setText('a1b', a1);
+      setText('a2b', a2);
+      setText('a3b', a3);
+      setText('a1c', a1);
+      setText('a2c', a2);
+      setText('a3c', a3);
+
+      // Imágenes
+      const combo = qs.get('img'); if(combo){ const el = document.getElementById('comboImagen'); if(el) el.src = decodeURIComponent(combo); }
+      const i1 = qs.get('img1'); if(i1){ const el = document.getElementById('img1'); if(el) el.src = decodeURIComponent(i1); }
+      const i2 = qs.get('img2'); if(i2){ const el = document.getElementById('img2'); if(el) el.src = decodeURIComponent(i2); }
+      const i3 = qs.get('img3'); if(i3){ const el = document.getElementById('img3'); if(el) el.src = decodeURIComponent(i3); }
+
+      // Duplica textos en marquee para efecto continuo
+      const track = document.getElementById('marqueeTrack');
+      if(track){
+        const base = `COMBO • ${a1.toUpperCase()} • ${a2.toUpperCase()} • ${a3.toUpperCase()} • VALIDADO • `;
+        track.textContent = (base + base + base + base);
+      }
+    })();
+  </script>
+</body>
+</html>
