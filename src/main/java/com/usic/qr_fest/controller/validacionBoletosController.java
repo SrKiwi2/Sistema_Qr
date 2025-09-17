@@ -48,4 +48,9 @@ public class validacionBoletosController {
     public String combo2() {
         return "boletos/venta/combo";
     }
+
+    @GetMapping(value = "/fexpo_uapv1")
+    public String fexpoUapV1() {
+        return "boletos/venta/fexpo";
+    }
 }

@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FEXPO UAP V1 — Bienvenida & Validación</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet"/>
+
+<style>
+  :root{
+    --uap-blue:#0d47a1; --uap-blue-2:#1976d2;
+    --uap-red:#b71c1c;  --uap-red-2:#e53935;
+    --gold:#f3c543;
+    --ink:#0b1020;
+    --text:#e8ecf6; --muted:#a9b3c9;
+    --glass:rgba(10,16,32,.55);
+    --ok:#2ecc71;
+    --card-border:rgba(255,255,255,.09);
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial,"Noto Sans",sans-serif;
+    background:
+      radial-gradient(1200px 800px at 10% 10%, #16213e 0%, #0b1020 45%),
+      linear-gradient(135deg,var(--uap-blue),#0a2458 40%, #0b1020 80%);
+    overflow-x:hidden;
+  }
+  /* Cambia a tema rojo con .theme-red en <body> */
+  body.theme-red{
+    background:
+      radial-gradient(1200px 800px at 10% 10%, #2a0f14 0%, #0b1020 45%),
+      linear-gradient(135deg,var(--uap-red),#6d0d13 40%, #0b1020 80%);
+  }
+
+  /* orbes animados */
+  .orb{
+    position:fixed; inset:auto -10% -20% auto; width:72vmax; height:72vmax;
+    background: radial-gradient(closest-side, #1e88e5aa, transparent 70%);
+    filter:blur(60px); animation:float 12s ease-in-out infinite alternate;
+    pointer-events:none; z-index:0;
+  }
+  .orb.orb2{
+    inset:-20% auto auto -10%;
+    background: radial-gradient(closest-side, #ef5350aa, transparent 70%);
+    animation-duration:16s;
+  }
+  body.theme-red .orb{ background: radial-gradient(closest-side, #ef5350aa, transparent 70%) }
+  body.theme-red .orb.orb2{ background: radial-gradient(closest-side, #1e88e5aa, transparent 70%) }
+  @keyframes float{from{transform:translateY(0)} to{transform:translateY(-40px)}}
+
+  .wrap{ position:relative; z-index:1; min-height:100%; display:grid; place-items:center; padding:24px }
+
+  /* marca UAP */
+  .brand{ display:flex; align-items:center; gap:12px; margin-bottom:16px; opacity:.95 }
+  .escudo{
+    width:52px; height:52px; border-radius:14px;
+    background:#fff; display:grid; place-items:center; color:#0a2458;
+    box-shadow:0 6px 18px rgba(243,197,67,.35); border:2px solid var(--gold);
+  }
+  .escudo svg{ width:36px; height:36px }
+  .brand .txt{ display:flex; flex-direction:column; line-height:1.05 }
+  .brand .txt small{ color:var(--muted); font-weight:600; letter-spacing:.06em }
+  .brand .txt strong{ font-size:1.05rem; letter-spacing:.02em }
+
+  .card{
+    width:min(1200px,96vw); border-radius:28px;
+    background:linear-gradient(180deg, var(--glass), rgba(15,22,41,.75));
+    border:1px solid var(--card-border);
+    box-shadow: 0 10px 30px rgba(25,118,210,.35), inset 0 1px 0 rgba(255,255,255,.06);
+    backdrop-filter: blur(14px); padding:22px; overflow:hidden;
+  }
+  body.theme-red .card{ box-shadow: 0 10px 30px rgba(229,57,53,.35), inset 0 1px 0 rgba(255,255,255,.06) }
+
+  /* cinta validación */
+  .ribbon{
+    display:inline-flex; align-items:center; gap:10px; padding:8px 14px; border-radius:999px;
+    background:linear-gradient(90deg,#00c853,#2ecc71); color:#0b2a12; font-weight:900; text-transform:uppercase; letter-spacing:.08em;
+    box-shadow:0 8px 18px rgba(46,204,113,.28); font-size:.9rem;
+  }
+  .ribbon svg{ width:18px; height:18px }
+
+  /* héroe */
+  .hero{ margin-top:12px; display:flex; flex-direction:column; gap:10px }
+  .title{
+    margin:0; font-weight:900; line-height:1.02;
+    font-size:clamp(2rem, 6.8vw, 3.4rem);
+    letter-spacing:.01em; display:flex; flex-wrap:wrap; gap:.55rem; align-items:center;
+  }
+  .title .fx{
+    background:conic-gradient(from 180deg at 50% 50%, #e3f2fd, #fff, #bbdefb, #e3f2fd);
+    background-size:200% 200%;
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:shine 6s linear infinite; position:relative; padding:0 .06em;
+    text-shadow:0 10px 30px rgba(25,118,210,.25);
+  }
+  body.theme-red .title .fx{ text-shadow:0 10px 30px rgba(229,57,53,.25) }
+  .badge-date{
+    display:inline-block; padding:.42rem .8rem; border-radius:999px; font-size:clamp(.8rem, 2.2vw, .95rem);
+    font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#05240f;
+    background:linear-gradient(90deg,#81c784,#a5d6a7); border:1px solid rgba(255,255,255,.18); box-shadow:0 8px 18px rgba(46,204,113,.28);
+  }
+  .tagline{
+    font-style:italic; color:#c9d6ff; opacity:.95; font-size:clamp(.95rem,2.4vw,1.05rem); margin:2px 0 0 0
+  }
+  .chips{ display:flex; gap:8px; flex-wrap:wrap }
+  .chip{
+    border:1px solid rgba(255,255,255,.12); color:#dfe7ff; padding:6px 10px; border-radius:999px; font-size:.78rem; letter-spacing:.02em;
+    backdrop-filter: blur(6px);
+  }
+  .marquee{
+    margin-top:8px; overflow:hidden; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+    background:linear-gradient(90deg, transparent, rgba(25,118,210,.12), transparent);
+  }
+  body.theme-red .marquee{ background:linear-gradient(90deg, transparent, rgba(229,57,53,.12), transparent); }
+  .marquee .track{
+    display:flex; gap:2rem; padding:.55rem 1rem; white-space:nowrap;
+    animation: slide 18s linear infinite;
+    font-weight:700; color:#dfe7ff; opacity:.85; letter-spacing:.08em; text-transform:uppercase; font-size:.78rem;
+  }
+  @keyframes shine{ 0%{background-position:0% 50%} 100%{background-position:200% 50%} }
+  @keyframes slide{ from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+  .grid{ display:grid; gap:22px; margin-top:22px; grid-template-columns: 1.15fr .85fr }
+  @media (max-width: 980px){ .grid{ grid-template-columns: 1fr } }
+
+  /* imagen central */
+  .media{
+    position:relative; border-radius:20px; overflow:hidden; border:1px solid rgba(255,255,255,.08);
+    background:#0a142a; aspect-ratio: 16/9; display:grid; place-items:center;
+  }
+  .media img{ width:100%; height:100%; object-fit:cover; object-position:center; transform:scale(1.02); transition:transform .6s }
+  .media:hover img{ transform:scale(1.05) }
+
+  /* panel verificación */
+  .verify{
+    display:grid; gap:16px; padding:18px; border-radius:20px;
+    background:linear-gradient(180deg, rgba(12,22,45,.6), rgba(12,22,45,.35));
+    border:1px dashed rgba(255,255,255,.18); position:relative;
+  }
+  .badge{
+    display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:14px;
+    background:linear-gradient(90deg,#81c784,#a5d6a7); color:#05240f; font-weight:900; text-transform:uppercase; letter-spacing:.06em;
+    width:max-content;
+  }
+  .badge svg{ width:20px; height:20px }
+  .msg{ font-size:1.05rem; color:#eaf5ff }
+  .status{
+    display:flex; align-items:center; gap:10px; font-weight:800;
+    padding:8px 12px; border-radius:12px; width:max-content;
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    border:1px solid rgba(255,255,255,.12);
+  }
+  .progress{
+    height:8px; border-radius:999px; background:rgba(255,255,255,.12); overflow:hidden;
+  }
+  .progress > span{
+    display:block; height:100%; width:0%;
+    background:linear-gradient(90deg, #1e88e5, #64b5f6);
+  }
+  body.theme-red .progress > span{ background:linear-gradient(90deg, #e53935, #ef9a9a) }
+
+  .actions{ display:flex; gap:10px; flex-wrap:wrap }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; padding:10px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.15);
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)); color:#fff; text-decoration:none; font-weight:800; cursor:pointer;
+    transition:transform .15s ease, box-shadow .2s ease;
+  }
+  .btn:hover{ transform:translateY(-1px); box-shadow:0 10px 22px rgba(255,255,255,.06) }
+  .btn.primary{ border-color: transparent; background:linear-gradient(90deg, var(--uap-blue-2), #3f51b5) }
+  body.theme-red .btn.primary{ background:linear-gradient(90deg, var(--uap-red-2), #b71c1c) }
+
+  /* ejes académicos */
+  .tracks{
+    display:grid; grid-template-columns: repeat(3, 1fr); gap:14px; margin-top:18px;
+  }
+  @media (max-width:860px){ .tracks{ grid-template-columns:1fr } }
+  .track-card{
+    display:flex; gap:12px; align-items:flex-start; padding:14px; border-radius:16px;
+    border:1px solid rgba(255,255,255,.12);
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+    backdrop-filter: blur(6px);
+  }
+  .track-icon{
+    width:42px; height:42px; border-radius:12px; display:grid; place-items:center;
+    background:linear-gradient(135deg,#1e88e5,#64b5f6); color:#081429; font-weight:900;
+    border:1px solid rgba(255,255,255,.25);
+  }
+  body.theme-red .track-icon{ background:linear-gradient(135deg,#ef5350,#ffab91) }
+  .track-title{ font-weight:900 }
+  .track-desc{ color:#cfd8ff; font-size:.95rem }
+
+  .micro{
+    font-size:.62rem; letter-spacing:.08em; color:#9fb2ff; opacity:.9;
+    background:linear-gradient(90deg,transparent, rgba(25,118,210,.15), transparent);
+    padding:6px 10px; border-radius:10px; border:1px solid rgba(255,255,255,.08);
+    margin-top:8px;
+  }
+  body.theme-red .micro{ background:linear-gradient(90deg,transparent, rgba(229,57,53,.15), transparent) }
+
+  .watermark{
+    position:absolute; inset:auto 0 -14px 0; text-align:center; pointer-events:none; opacity:.06; font-weight:900;
+    font-size: clamp(3rem, 16vw, 8rem); letter-spacing:.1em; color:#ffffff;
+  }
+</style>
+</head>
+<body>
+  <div class="orb"></div><div class="orb orb2"></div>
+
+  <main class="wrap">
+    <!-- Marca institucional -->
+    <header class="brand" aria-label="Universidad Amazónica de Pando">
+      <div class="escudo" title="UAP">
+        <!-- Logo UAP minimal (editable por SVG oficial si lo tenés) -->
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect x="6" y="6" width="52" height="52" rx="12" fill="none" stroke="#0d47a1" stroke-width="4"/>
+          <text x="50%" y="56%" text-anchor="middle" font-size="24" font-weight="900" fill="#0d47a1" font-family="Poppins, Arial">UAP</text>
+        </svg>
+      </div>
+      <div class="txt">
+        <small>Universidad Amazónica de Pando</small>
+        <strong>Organización oficial del evento</strong>
+      </div>
+    </header>
+
+    <section class="card" role="region" aria-label="FEXPO UAP V1 — Bienvenida y validación">
+      <span class="ribbon" title="Verificación">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M20 7L9 18l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        QR verificado — Acceso general FEXPO
+      </span>
+
+      <!-- Héroe -->
+      <div class="hero">
+        <h1 class="title">
+          <span class="fx" id="edTitle" th:text="${edicion != null ? edicion : 'FEXPO UAP V1'}">FEXPO UAP V1</span>
+          <span class="badge-date" id="dateBadge">19–21 SEP 2025</span>
+        </h1>
+        <p class="tagline" id="tagline" th:text="${tagline}">“ACADEMIA, CIENCIAS Y TECNOLOGIA PARA RENOVAR PANDO”</p>
+        <div class="chips">
+          <span class="chip" id="venueChip" th:text="${lugar}">Campus Universitario Las Palmas</span>
+          <span class="chip">Edición 2025</span>
+          <span class="chip">Ingreso único</span>
+          <span class="chip">Validación institucional</span>
+        </div>
+
+        <!-- Marquee -->
+        <div class="marquee" aria-hidden="true">
+          <div class="track" id="marqueeTrack">
+            ACADEMIA • CIENCIAS • TECNOLOGÍA • INNOVACIÓN • EMPRENDIMIENTO • FEXPO UAP • ACADEMIA • CIENCIAS • TECNOLOGÍA • INNOVACIÓN • EMPRENDIMIENTO • FEXPO UAP •
+          </div>
+        </div>
+      </div>
+
+      <div class="grid">
+        <!-- Imagen central -->
+        <figure class="media" aria-label="Imagen institucional de la feria">
+          <!-- Cambia la ruta o usa th:src -->
+          <img id="heroImg" src="/assets/images/fexpo.png" alt="FEXPO UAP V1 — Campus Universitario Las Palmas">
+        </figure>
+
+        <!-- Verificación / estado -->
+        <div class="verify">
+          <span class="badge" aria-label="Ingreso válido">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 7L9 18l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Bienvenido/a — Acceso general
+          </span>
+
+          <p class="msg">
+            Tu boleto ha sido verificado por el sistema oficial de la <strong>Universidad Amazónica de Pando</strong>.  
+            Este pase te permite ingresar a las actividades de la <strong id="edLabel">FEXPO UAP V1</strong>, sujetas a control y aforo.
+          </p>
+
+          <!-- Estado dinámico -->
+          <div class="status" id="statusBox">
+            <!-- Icono reloj -->
+            <svg viewBox="0 0 24 24" fill="none" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <span id="stateText">Comienza en —</span>
+          </div>
+          <div class="progress" aria-label="Progreso del evento" title="Progreso del evento">
+            <span id="progressBar"></span>
+          </div>
+
+          <!-- Acciones -->
+          <div class="actions">
+            <a class="btn primary" id="gcal" target="_blank" rel="noopener" title="Añadir al calendario">Añadir al calendario</a>
+            <button class="btn" onclick="window.print()" type="button" title="Imprimir confirmación">Imprimir</button>
+          </div>
+
+          <div class="micro">
+            Presenta el boleto físico con el código QR original. La manipulación o duplicación anula el ingreso. El personal podrá solicitar documento de identidad.
+          </div>
+        </div>
+      </div>
+
+      <div class="watermark">UAP</div>
+    </section>
+  </main>
+
+<script>
+/* ====== Personalización por URL / Thymeleaf ======
+   ?ed=FEXPO%20UAP%20V1&from=2025-09-19&to=2025-09-21&venue=Campus%20Las%20Palmas&tagline=...&imgHero=/ruta.jpg&theme=red
+*/
+(function(){
+  const qs = new URLSearchParams(location.search);
+  const ed = qs.get('ed') || (typeof edicion !== 'undefined' ? edicion : 'FEXPO UAP V1');
+  const fromStr = qs.get('from') || '2025-09-19';
+  const toStr   = qs.get('to')   || '2025-09-21';
+  const venue   = qs.get('venue')|| 'Campus Universitario Las Palmas';
+  const tagline = qs.get('tagline') || 'ACADEMIA, CIENCIAS Y TECNOLOGIA PARA RENOVAR PANDO';
+  const imgHero = qs.get('imgHero');
+  const theme   = (qs.get('theme') || '').toLowerCase();
+
+  // Aplica tema
+  if(theme === 'red'){ document.body.classList.add('theme-red'); }
+
+  // Setea textos
+  const edTitle = document.getElementById('edTitle');
+  const edLabel = document.getElementById('edLabel');
+  const venueChip = document.getElementById('venueChip');
+  const tg = document.getElementById('tagline');
+  if(edTitle) edTitle.textContent = ed;
+  if(edLabel) edLabel.textContent = ed;
+  if(venueChip) venueChip.textContent = venue;
+  if(tg) tg.textContent = `“${tagline}”`;
+
+  // Imagen hero
+  if(imgHero){ const hi = document.getElementById('heroImg'); if(hi) hi.src = decodeURIComponent(imgHero); }
+
+  // Fecha legible (ES)
+  const MES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+  const LME = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+  const from = new Date(fromStr+'T00:00:00');
+  const to   = new Date(toStr  +'T23:59:59');
+  const badge = document.getElementById('dateBadge');
+
+  function rangoCorto(d1,d2){
+    if(d1.getMonth()===d2.getMonth()){
+      return `${d1.getDate()}–${d2.getDate()} ${MES[d1.getMonth()]} ${d1.getFullYear()}`;
+    }
+    return `${d1.getDate()} ${MES[d1.getMonth()]} – ${d2.getDate()} ${MES[d2.getMonth()]} ${d2.getFullYear()}`;
+  }
+  if(badge) badge.textContent = rangoCorto(from,to).toUpperCase();
+
+  // Estado: cuenta regresiva / en curso / finalizado
+  const stateText = document.getElementById('stateText');
+  const pbar = document.getElementById('progressBar');
+
+  function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+  function tick(){
+    const now = new Date();
+    if(now < from){
+      // countdown
+      const ms = from - now;
+      const d = Math.floor(ms/86400000);
+      const h = Math.floor((ms%86400000)/3600000);
+      const m = Math.floor((ms%3600000)/60000);
+      if(stateText) stateText.textContent = `Comienza en ${d}d ${h}h ${m}m`;
+      const total = to - from;
+      const done = 0;
+      if(pbar) pbar.style.width = '0%';
+    }else if(now >= from && now <= to){
+      if(stateText) stateText.textContent = `EN CURSO — ${from.getDate()} al ${to.getDate()} de ${LME[to.getMonth()]} ${to.getFullYear()}`;
+      const total = to - from;
+      const done = now - from;
+      const pct = clamp01(done/total)*100;
+      if(pbar) pbar.style.width = pct.toFixed(1)+'%';
+    }else{
+      if(stateText) stateText.textContent = `FINALIZADO — ${to.getDate()} de ${LME[to.getMonth()]} ${to.getFullYear()}`;
+      if(pbar) pbar.style.width = '100%';
+    }
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  // Google Calendar (evento de todo el día en rango)
+  function yyyymmdd(d){
+    const mm = String(d.getMonth()+1).padStart(2,'0');
+    const dd = String(d.getDate()).padStart(2,'0');
+    return `${d.getFullYear()}${mm}${dd}`;
+  }
+  const gcal = document.getElementById('gcal');
+  if(gcal){
+    const dates = `${yyyymmdd(from)}/${yyyymmdd(new Date(to.getTime()+86400000))}`; // end exclusive
+    const text = encodeURIComponent(ed);
+    const details = encodeURIComponent(tagline);
+    const location = encodeURIComponent(venue);
+    gcal.href = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&details=${details}&location=${location}&dates=${dates}`;
+  }
+
+  // Marquee dinámico
+  const track = document.getElementById('marqueeTrack');
+  if(track){
+    const base = `${ed.toUpperCase()} • ACADEMIA • CIENCIAS • TECNOLOGÍA • INNOVACIÓN • ${venue.toUpperCase()} • `;
+    track.textContent = (base + base + base + base);
+  }
+})();
+</script>
+</body>
+</html>
