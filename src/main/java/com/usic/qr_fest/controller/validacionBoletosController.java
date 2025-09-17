@@ -54,12 +54,12 @@ public class validacionBoletosController {
         return "boletos/venta/fexpo";
     }
 
-    @GetMapping(value = "/fexpo-administrativo")
+    @GetMapping(value = "/entrada-administrativo")
     public String fexpoUapAdmin() {
         return "boletos/venta/fexpoAdmin";
     }
 
-    @GetMapping(value = "/fexpo-docente")
+    @GetMapping(value = "/entrada-docente")
     public String fexpoUapDocente() {
         return "boletos/venta/fexpoDocente";
     }
